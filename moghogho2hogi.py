@@ -109,11 +109,14 @@ async def on_message(message):
                 await message.channel.send(f'{lsp_client}! 당신은 비겼습니다.')
 
 #'뭐먹' 응답
+   
     if message.content.startswith('뭐먹'):
-       food = ['치킨','피자','중식','초밥','떡볶이','햄버거','족발보쌈','갈비탕','돈까스','회','찜닭','삼겹살','편의점','컵라면','굶어','국밥','냉면']
-       choice_food = random.choice(food)
-       await message.channel.send(f'{food}')
-       await message.channel.send(f"2hogi's pick : ★{choice_food}★")
+        food = ['치킨','피자','중식','초밥','떡볶이','햄버거','족발보쌈','갈비탕','돈까스','회','찜닭','삼겹살','편의점','컵라면','굶어','국밥','냉면']
+        if message.content == '뭐먹리스트':
+            await message.channel.send(f'{food}')
+        else:
+            choice_food = random.choice(food)
+            await message.channel.send(f"2hogi's pick : ★{choice_food}★")
 
 #로또 번호 
     if message.content.startswith('/lotto'):
