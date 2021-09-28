@@ -3,6 +3,7 @@ from discord import message
 from discord import channel
 from discord.ext import commands
 from discord.ext.commands import Bot
+import os
 
 client = discord.Client()
 
@@ -336,5 +337,5 @@ async def on_raw_reaction_remove(payload):
     except KeyError as e:
             print(f'{e} : 에러에러에러')
 
-
-client.run('ODg1NDI1Mzk1Mzk3MTc3MzQ1.YTm2qA.S4ujorMP4z13kCRy63F1yU7V27s')
+acess_token = os.environ["BOT_TOKEN"]
+client.run(access_token)
