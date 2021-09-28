@@ -234,76 +234,76 @@ async def on_reaction_add(reaction, user):
 
 #돌깎기 -----------------------------
     found_index = 0
+    if str(reaction.emoji) == "☝️" or str(reaction.emoji) == "✌️" or str(reaction.emoji) == "👎":
+        if str(reaction.emoji) == "☝️":
+            if add_user == user.id:
+                if '◇' not in 각인1:
+                    return
+                else:
+                    pbb_rand = random.randint(1,100)
+                    if(pbb_base > pbb_rand):
+                        pof = '🔷'
+                        found_index = 각인1.index('◇')
+                        각인1.remove('◇')
+                        각인1.insert(found_index,pof)
+                        if pbb_base > 25:
+                            pbb_base -= 10
 
-    if str(reaction.emoji) == "☝️":
-        if add_user == user.id:
-            if '◇' not in 각인1:
-                return
-            else:
-                pbb_rand = random.randint(1,100)
-                if(pbb_base > pbb_rand):
-                    pof = '🔷'
-                    found_index = 각인1.index('◇')
-                    각인1.remove('◇')
-                    각인1.insert(found_index,pof)
-                    if pbb_base > 25:
-                        pbb_base -= 10
+                    elif(pbb_base < pbb_rand):
+                        pof = '◆'
+                        found_index = 각인1.index('◇')
+                        각인1.remove('◇')
+                        각인1.insert(found_index,pof)
+                        if pbb_base < 75:
+                            pbb_base += 10
 
-                elif(pbb_base < pbb_rand):
-                    pof = '◆'
-                    found_index = 각인1.index('◇')
-                    각인1.remove('◇')
-                    각인1.insert(found_index,pof)
-                    if pbb_base < 75:
-                        pbb_base += 10
-    
-    if str(reaction.emoji) == "✌️":
-        if add_user == user.id:
-            if '◇' not in 각인2:
-                return
-            else:
-                pbb_rand = random.randint(0,100)
-                if(pbb_base > pbb_rand):
-                    pof = '🔷'
-                    found_index = 각인2.index('◇')
-                    각인2.remove('◇')
-                    각인2.insert(found_index,pof)
-                    if pbb_base > 25:
-                        pbb_base -= 10
-                elif(pbb_base < pbb_rand):
-                    pof = '◆'
-                    found_index = 각인2.index('◇')
-                    각인2.remove('◇')
-                    각인2.insert(found_index,pof)
-                    if pbb_base < 75:
-                        pbb_base += 10
-        
-    if str(reaction.emoji) == "👎":
-        if add_user == user.id:
-            if '◇' not in 감소:
-                return
-            else:
-                pbb_rand = random.randint(0,100)
-                if(pbb_base > pbb_rand):
-                    pof = '🔷'
-                    found_index = 감소.index('◇')
-                    감소.remove('◇')
-                    감소.insert(found_index,pof)
-                    if pbb_base > 25:
-                        pbb_base -= 10
-                elif(pbb_base < pbb_rand):
-                    pof = '◆'
-                    found_index = 감소.index('◇')
-                    감소.remove('◇')
-                    감소.insert(found_index,pof)
-                    if pbb_base < 75:
-                        pbb_base += 10
-    if len(각인1) + len(각인2) + len(감소) == 30:
-        await msg.edit(content=f"★돌 시뮬★ \n 각인1☝️  : {각인1} \n 각인2✌️ : {각인2} \n 감소 👎  : {감소} \n 확률 : {pbb_base}%")
-    if (len(각인1) + len(각인2) + len(감소)) == 30 and '◇' not in 각인1 and '◇' not in 각인2 and '◇' not in 감소:
-        await msg.edit(content=f"★돌 시뮬★ \n 각인1☝️  : {각인1} \n 각인2✌️ : {각인2} \n 감소 👎  : {감소} \n 확률 : {pbb_base}% \n {각인1.count('🔷')} {각인2.count('🔷')} {감소.count('🔷')} 돌입니다.")
-        if (각인1.count('🔷') + 각인2.count('🔷') > 13):
-            await client.get_channel(890618012883906590).send(f'<@{add_user}>님이 {각인1.count("🔷")} {각인2.count("🔷")} {감소.count("🔷")} 돌을 깎았습니다!')
+        if str(reaction.emoji) == "✌️":
+            if add_user == user.id:
+                if '◇' not in 각인2:
+                    return
+                else:
+                    pbb_rand = random.randint(0,100)
+                    if(pbb_base > pbb_rand):
+                        pof = '🔷'
+                        found_index = 각인2.index('◇')
+                        각인2.remove('◇')
+                        각인2.insert(found_index,pof)
+                        if pbb_base > 25:
+                            pbb_base -= 10
+                    elif(pbb_base < pbb_rand):
+                        pof = '◆'
+                        found_index = 각인2.index('◇')
+                        각인2.remove('◇')
+                        각인2.insert(found_index,pof)
+                        if pbb_base < 75:
+                            pbb_base += 10
+
+        if str(reaction.emoji) == "👎":
+            if add_user == user.id:
+                if '◇' not in 감소:
+                    return
+                else:
+                    pbb_rand = random.randint(0,100)
+                    if(pbb_base > pbb_rand):
+                        pof = '🔷'
+                        found_index = 감소.index('◇')
+                        감소.remove('◇')
+                        감소.insert(found_index,pof)
+                        if pbb_base > 25:
+                            pbb_base -= 10
+                    elif(pbb_base < pbb_rand):
+                        pof = '◆'
+                        found_index = 감소.index('◇')
+                        감소.remove('◇')
+                        감소.insert(found_index,pof)
+                        if pbb_base < 75:
+                            pbb_base += 10
+        if len(각인1) + len(각인2) + len(감소) == 30:
+            await msg.edit(content=f"★돌 시뮬★ \n 각인1☝️  : {각인1} \n 각인2✌️ : {각인2} \n 감소 👎  : {감소} \n 확률 : {pbb_base}%")
+        if (len(각인1) + len(각인2) + len(감소)) == 30 and '◇' not in 각인1 and '◇' not in 각인2 and '◇' not in 감소:
+            await msg.edit(content=f"★돌 시뮬★ \n 각인1☝️  : {각인1} \n 각인2✌️ : {각인2} \n 감소 👎  : {감소} \n 확률 : {pbb_base}% \n {각인1.count('🔷')} {각인2.count('🔷')} {감소.count('🔷')} 돌입니다.")
+            if (각인1.count('🔷') + 각인2.count('🔷') > 13):
+                await client.get_channel(890618012883906590).send(f'<@{add_user}>님이 {각인1.count("🔷")} {각인2.count("🔷")} {감소.count("🔷")} 돌을 깎았습니다!')
 
 
 #사용자 이모지 자동 제거
