@@ -25,7 +25,7 @@ async def on_message(message):
     
     if message.content.startswith('졸려'):
         await message.channel.send(f'잘자요')
-    if message.content.startswith(''):
+    if message.content.startswith('잠와'):
         await message.channel.send(f'잘자요')
 
     if message.content.startswith('$'):
