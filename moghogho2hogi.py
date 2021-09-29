@@ -329,6 +329,7 @@ async def on_reaction_add(reaction, user):
 
 #사용자 이모지 자동 제거
 
+
 @client.event
 async def on_raw_reaction_add(payload):
     channel = await client.fetch_channel(payload.channel_id)
