@@ -35,11 +35,13 @@ async def on_message(message):
 
     if message.content.startswith('$'):
         global o_msg_st
+        global o_msg_dic
+        global o_msg_id
         o_msg_st = message
         o_msg_id = message.id
         o_msg_dic[o_msg_id] = message
         print(f"{o_msg_st}")
-        await o_msg_dic[message.id].add_reaction('⭕')
+        await o_msg_dic[o_msg_id].add_reaction('⭕')
 
 
     if message.content.startswith('강화!'):
