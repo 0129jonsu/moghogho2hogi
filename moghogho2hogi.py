@@ -312,6 +312,9 @@ async def on_reaction_add(reaction, user):
             await msg.edit(content=f"★돌 시뮬★ \n 각인1☝️  : {각인1} \n 각인2✌️ : {각인2} \n 감소 👎  : {감소} \n 확률 : {pbb_base}% \n {각인1.count('🔷')} {각인2.count('🔷')} {감소.count('🔷')} 돌입니다.")
             if (각인1.count('🔷') + 각인2.count('🔷') > 13):
                 await client.get_channel(890618012883906590).send(f'<@{add_user}>님이 {각인1.count("🔷")} {각인2.count("🔷")} {감소.count("🔷")} 돌을 깎았습니다!')
+                각인1.delete()
+                각인2.delete()
+                감소.delete()
 
 
 #사용자 이모지 자동 제거
