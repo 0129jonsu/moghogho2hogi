@@ -13,10 +13,7 @@ tmp_msg = []
 tmp_index = -1
 
 #⭕ 변수
-global o_msg_id
-global o_msg_dic
-global o_msg
-o_msg_dic = {}
+
 
 #실행 확인
 @client.event
@@ -36,13 +33,9 @@ async def on_message(message):
 
     if message.content.startswith('$'):
         global o_msg_st
-        global o_msg_dic
-        glboal o_msg_id
         o_msg_st = message
-        o_msg_id = message.id
-        o_msg_dic[o_msg_id] = message
         print(f"{o_msg_st}")
-        await o_msg_dic[o_msg_id].add_reaction('⭕')
+        await o_msg_st.add_reaction('⭕')
 
 
     if message.content.startswith('강화!'):
@@ -328,7 +321,9 @@ async def on_reaction_add(reaction, user):
 
 
 #사용자 이모지 자동 제거
-
+global o_msg_dic
+global o_msg
+o_msg_dic = {}
 
 @client.event
 async def on_raw_reaction_add(payload):
@@ -345,7 +340,7 @@ async def on_raw_reaction_add(payload):
     if str(payload.emoji) == '👏' and payload.user_id != client.user.id:
         await message.remove_reaction('👏', payload.member)
     if str(payload.emoji) == '⭕' and payload.user_id != client.user.id:
-        o_msg = await client.get_channel(892220976228618270).send(f'<@{payload.user_id}> 참가! ({o_msg_dic[o_msg_id].content[1:]})')
+        o_msg = await client.get_channel(892220976228618270).send(f'<@{payload.user_id}> 참가! ({o_msg_st.content[1:]})')
         o_msg_dic[payload.user_id] = o_msg
 
 @client.event
