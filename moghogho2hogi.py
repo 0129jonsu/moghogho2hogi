@@ -13,8 +13,9 @@ tmp_msg = []
 tmp_index = -1
 
 #⭕ 변수
-global o_msg_dic
 global o_msg_id
+global o_msg_dic
+global o_msg
 o_msg_dic = {}
 
 #실행 확인
@@ -36,7 +37,7 @@ async def on_message(message):
     if message.content.startswith('$'):
         global o_msg_st
         global o_msg_dic
-        global o_msg_id
+        glboal o_msg_id
         o_msg_st = message
         o_msg_id = message.id
         o_msg_dic[o_msg_id] = message
@@ -327,9 +328,6 @@ async def on_reaction_add(reaction, user):
 
 
 #사용자 이모지 자동 제거
-global o_msg_dic
-o_msg_dic = {}
-global o_msg
 
 @client.event
 async def on_raw_reaction_add(payload):
