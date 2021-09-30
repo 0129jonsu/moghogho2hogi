@@ -342,6 +342,8 @@ async def on_raw_reaction_add(payload):
         await message.remove_reaction('👋', payload.member)
     if str(payload.emoji) == '😆' and payload.user_id != client.user.id and payload.user_id != 885419823499214859:
         await rabbit_msg.edit(content=f" /)/)\n(> <)/\n(     )")
+        sleep(2)
+        await rabbit_msg.edit(content=f"/)/)\n('   ')/\n(     )")
         await message.remove_reaction('😆', payload.member)
 
 @client.event
