@@ -333,7 +333,7 @@ async def on_raw_reaction_add(payload):
             time.sleep(0.3)
             await rabbit_msg.edit(content=f" /)/)\n('   ')\\n(     )")
             time.sleep(0.3)
-            await rabbit_msg.edit(content=f" /)/)\n('   ')-\n(     )")
+            await rabbit_msg.edit(content=f" /)/)\n('   ')--\n(     )")
             time.sleep(0.3)
             await rabbit_msg.edit(content=f" /)/)\n('   ')/\n(     )")
         await message.remove_reaction('👋', payload.member)
