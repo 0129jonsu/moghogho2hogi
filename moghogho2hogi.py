@@ -71,7 +71,7 @@ async def on_message(message):
     
     if message.content.startswith('토끼'):
         global rabbit_msg
-        rabbit_msg = await message.channel.send(f"/)/)\n('   ')\n(     )")
+        rabbit_msg = await message.channel.send(f"/)/)\n('   ')/\n(     )")
         await rabbit_msg.add_reaction('👋')
         
     
