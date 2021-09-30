@@ -73,6 +73,8 @@ async def on_message(message):
         global rabbit_msg
         rabbit_msg = await message.channel.send(f"/)/)\n('   ')/\n(     )")
         await rabbit_msg.add_reaction('👋')
+        await rabbit_msg.add_reaction('😆')
+        
         
     
     if message.content.startswith('졸려'):
@@ -338,6 +340,9 @@ async def on_raw_reaction_add(payload):
             time.sleep(0.3)
             await rabbit_msg.edit(content=f" /)/)\n('   ')/\n(     )")
         await message.remove_reaction('👋', payload.member)
+    if str(payload.emoji) == '😆' and payload.user_id != client.user.id and payload.user_id != 885419823499214859:
+        await rabbit_msg.edit(content=f" /)/)\n(> <)/\n(     )")
+        await message.remove_reaction('😆', payload.member)
 
 @client.event
 async def on_raw_reaction_remove(payload): 
