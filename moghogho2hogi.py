@@ -302,9 +302,7 @@ async def on_reaction_add(reaction, user):
 
 
 #사용자 이모지 자동 제거
-global o_msg_dic
 global o_msg
-o_msg_dic = {}
 
 @client.event
 async def on_raw_reaction_add(payload):
