@@ -69,6 +69,9 @@ async def on_message(message):
     if message.author == client.user:
         return
     
+    if message.content.startswith('빠삐는'):
+        await message.channel.send(f'사람을 찢어...!')    
+    
     if message.content.startswith('토끼'):
         global rabbit_msg
         rabbit_msg = await message.channel.send(f"/)/)\n('   ')/\n(     )")
