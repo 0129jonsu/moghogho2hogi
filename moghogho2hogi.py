@@ -70,7 +70,11 @@ async def on_message(message):
         return
     
     if message.content.startswith('토끼'):
-        await message.channnel.send(f'/)/)\n('   ')\n(     )')
+        if message.content.startswith('인사토끼'):
+            await message.channel.send(f' /)/)\n\('   ')/\n (     )')
+        else:
+            await message.channel.send(f'/)/)\n('   ')\n(     )')
+        
     
     if message.content.startswith('졸려'):
         await message.channel.send(f'잘자요')
