@@ -329,9 +329,9 @@ async def on_raw_reaction_add(payload):
         o_msg_dic[payload.user_id] = o_msg
     if str(payload.emoji) == '👋' and payload.user_id != client.user.id and payload.user_id != 885419823499214859:
         for i in range(1,3):
-            await rabbit_msg.edit(content=f" /)/)\n('   ')-\n(     )")
+            await rabbit_msg.edit(content=f" /)/)\n('   ')ㅡ\n(     )")
             time.sleep(0.3)
-            await rabbit_msg.edit(content=f" /)/)\n('   ')\\n(     )")
+            await rabbit_msg.edit(content=f" /)/)\n('   ')\\\n(     )")
             time.sleep(0.3)
             await rabbit_msg.edit(content=f" /)/)\n('   ')\n(     )")
             time.sleep(0.3)
