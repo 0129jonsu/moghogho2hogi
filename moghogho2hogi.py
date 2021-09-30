@@ -12,6 +12,9 @@ global tmp_index
 tmp_msg = []
 tmp_index = -1
 
+o_msg_dic = {}
+stone_dic = {}
+
 #⭕ 변수
 
 
@@ -20,6 +23,45 @@ tmp_index = -1
 async def on_ready():
     print('We have logged in as {0.user}'.format(client))
     await client.change_presence(activity=discord.Game(name="명령어!"))
+    
+    class stone_data:
+    def __init__(self):
+        self.각인1 = ['◇','◇','◇','◇','◇','◇','◇','◇','◇','◇']
+        self.각인2 = ['◇','◇','◇','◇','◇','◇','◇','◇','◇','◇']
+        self.감소 = ['◇','◇','◇','◇','◇','◇','◇','◇','◇','◇']
+        self.pass_or_fail = ''
+        self.pbb_base = 75
+
+    def set_stone_data(self, g1,g2,g3,pof,sm,pb):
+        self.각인1 = g1
+        self.각인2 = g2
+        self.감소 = g3
+        self.pass_or_fail = pof
+        self.stone_msg = sm
+        self.pbb_base = pb
+
+    def set_stone_msg(self, sm):
+        self.stone_msg = sm
+
+    def stone_start(self,g):
+        if '◇' not in g:
+            return
+        else:
+            pbb_rand = random.randint(1,100)
+            if(self.pbb_base > pbb_rand):
+                self.pass_or_fail = '🔷'
+                found_index = g.index('◇')
+                g.remove('◇')
+                g.insert(found_index,self.pass_or_fail)
+                if self.pbb_base > 25:
+                    self.pbb_base -= 10
+            elif(self.pbb_base < pbb_rand):
+                self.pass_or_fail = '◆'
+                found_index = g.index('◇')
+                g.remove('◇')
+                g.insert(found_index,self.pass_or_fail)
+                if self.pbb_base < 75:
+                    self.pbb_base += 10
 
 
 @client.event
@@ -68,13 +110,6 @@ async def on_message(message):
         global add_user
         add_user = message.author.id
 
-        global 각인1
-        global 각인2
-        global 감소
-        global pof
-        global msg
-        global pbb_base
-
         pbb_base = 75
         pof = ''
         각인1 = ['◇','◇','◇','◇','◇','◇','◇','◇','◇','◇']
@@ -82,9 +117,11 @@ async def on_message(message):
         감소 = ['◇','◇','◇','◇','◇','◇','◇','◇','◇','◇']
 
         msg = await message.channel.send(f"★돌 시뮬★ \n 각인1☝️  : {각인1} \n 각인2✌️ : {각인2} \n 감소 👎  : {감소} \n 확률 : 75%")
-        await msg.add_reaction('☝️')
-        await msg.add_reaction('✌️')
-        await msg.add_reaction('👎')
+        stone_dic[add_user] = stone_data()
+        stone_dic[add_user].set_stone_msg(msg)
+        await stone_dic[add_user].stone_msg.add_reaction('☝️')
+        await stone_dic[add_user].stone_msg.add_reaction('✌️')
+        await stone_dic[add_user].stone_msg.add_reaction('👎')
 
 #가위바위보-----------------------------
     if message.content.startswith('가위바위보'):
@@ -195,9 +232,6 @@ async def on_reaction_add(reaction, user):
         global user_item
         user_item_lv = 1
         rf_pbb = 90
-        global pbb_base
-        global msg
-        pbb_base = 75
         return None
     if str(reaction.emoji) == "👍":
         if rf_user == user.id:
@@ -245,85 +279,26 @@ async def on_reaction_add(reaction, user):
         
 
 #돌깎기 -----------------------------
-    found_index = 0
     if str(reaction.emoji) == "☝️" or str(reaction.emoji) == "✌️" or str(reaction.emoji) == "👎":
         if str(reaction.emoji) == "☝️":
-            if add_user == user.id:
-                if '◇' not in 각인1:
-                    return
-                else:
-                    pbb_rand = random.randint(1,100)
-                    if(pbb_base > pbb_rand):
-                        pof = '🔷'
-                        found_index = 각인1.index('◇')
-                        각인1.remove('◇')
-                        각인1.insert(found_index,pof)
-                        if pbb_base > 25:
-                            pbb_base -= 10
-
-                    elif(pbb_base < pbb_rand):
-                        pof = '◆'
-                        found_index = 각인1.index('◇')
-                        각인1.remove('◇')
-                        각인1.insert(found_index,pof)
-                        if pbb_base < 75:
-                            pbb_base += 10
-
+                stone_dic[user.id].stone_start(stone_dic[user.id].각인1)
         if str(reaction.emoji) == "✌️":
-            if add_user == user.id:
-                if '◇' not in 각인2:
-                    return
-                else:
-                    pbb_rand = random.randint(0,100)
-                    if(pbb_base > pbb_rand):
-                        pof = '🔷'
-                        found_index = 각인2.index('◇')
-                        각인2.remove('◇')
-                        각인2.insert(found_index,pof)
-                        if pbb_base > 25:
-                            pbb_base -= 10
-                    elif(pbb_base < pbb_rand):
-                        pof = '◆'
-                        found_index = 각인2.index('◇')
-                        각인2.remove('◇')
-                        각인2.insert(found_index,pof)
-                        if pbb_base < 75:
-                            pbb_base += 10
-
+                stone_dic[user.id].stone_start(stone_dic[user.id].각인2)
         if str(reaction.emoji) == "👎":
-            if add_user == user.id:
-                if '◇' not in 감소:
-                    return
-                else:
-                    pbb_rand = random.randint(0,100)
-                    if(pbb_base > pbb_rand):
-                        pof = '🔷'
-                        found_index = 감소.index('◇')
-                        감소.remove('◇')
-                        감소.insert(found_index,pof)
-                        if pbb_base > 25:
-                            pbb_base -= 10
-                    elif(pbb_base < pbb_rand):
-                        pof = '◆'
-                        found_index = 감소.index('◇')
-                        감소.remove('◇')
-                        감소.insert(found_index,pof)
-                        if pbb_base < 75:
-                            pbb_base += 10
-        if len(각인1) + len(각인2) + len(감소) == 30:
-            await msg.edit(content=f"★돌 시뮬★ \n 각인1☝️  : {각인1} \n 각인2✌️ : {각인2} \n 감소 👎  : {감소} \n 확률 : {pbb_base}%")
-        if (len(각인1) + len(각인2) + len(감소)) == 30 and '◇' not in 각인1 and '◇' not in 각인2 and '◇' not in 감소:
-            await msg.edit(content=f"★돌 시뮬★ \n 각인1☝️  : {각인1} \n 각인2✌️ : {각인2} \n 감소 👎  : {감소} \n 확률 : {pbb_base}% \n {각인1.count('🔷')} {각인2.count('🔷')} {감소.count('🔷')} 돌입니다.")
-            if 각인1.count('🔷') + 각인2.count('🔷') > 13:
-                if 각인1.count('🔷') == 8 and 각인2.count('🔷') == 6:
+                stone_dic[user.id].stone_start(stone_dic[user.id].감소)
+           
+        if len(stone_dic[user.id].각인1) + len(stone_dic[user.id].각인2) + len(stone_dic[user.id].감소) == 30:
+            await stone_dic[user.id].stone_msg.edit(content=f"★돌 시뮬★ \n 각인1☝️  : {stone_dic[user.id].각인1} \n 각인2✌️ : {stone_dic[user.id].각인2} \n 감소 👎  : {stone_dic[user.id].감소} \n 확률 : {stone_dic[user.id].pbb_base}%")
+        if (len(stone_dic[user.id].각인1) + len(stone_dic[user.id].각인2) + len(stone_dic[user.id].감소)) == 30 and '◇' not in stone_dic[user.id].각인1 and '◇' not in stone_dic[user.id].각인2 and '◇' not in stone_dic[user.id].감소:
+            await stone_dic[user.id].stone_msg.edit(content=f"★돌 시뮬★ \n 각인1☝️  : {stone_dic[user.id].각인1} \n 각인2✌️ : {stone_dic[user.id].각인2} \n 감소 👎  : {stone_dic[user.id].감소} \n 확률 : {stone_dic[user.id].pbb_base}% \n {stone_dic[user.id].각인1.count('🔷')} {stone_dic[user.id].각인2.count('🔷')} {stone_dic[user.id].감소.count('🔷')} 돌입니다.")
+            if stone_dic[user.id].각인1.count('🔷') + stone_dic[user.id].각인2.count('🔷') > 5:
+                if stone_dic[user.id].각인1.count('🔷') == 8 and stone_dic[user.id].각인2.count('🔷') == 6:
                     pass
-                elif 각인1.count('🔷') == 6 and 각인2.count('🔷') == 8:
+                elif stone_dic[user.id].각인1.count('🔷') == 6 and stone_dic[user.id].각인2.count('🔷') == 8:
                     pass
                 else:
-                    await client.get_channel(890618012883906590).send(f'<@{add_user}>님이 {각인1.count("🔷")} {각인2.count("🔷")} {감소.count("🔷")} 돌을 깎았습니다!')
-                    각인1.delete()
-                    각인2.delete()
-                    감소.delete()
+                    await client.get_channel(890618012883906590).send(f'<@{add_user}>님이 {stone_dic[user.id].각인1.count("🔷")} {stone_dic[user.id].각인2.count("🔷")} {stone_dic[user.id].감소.count("🔷")} 돌을 깎았습니다!')
+                    stone_dic[user.id] = ''
 
 
 #사용자 이모지 자동 제거
