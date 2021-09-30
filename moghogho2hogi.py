@@ -1,4 +1,4 @@
-import discord, asyncio, random, re
+import discord, asyncio, random, re, time
 from discord import message
 from discord import channel
 from discord.ext import commands
@@ -70,10 +70,9 @@ async def on_message(message):
         return
     
     if message.content.startswith('토끼'):
-        if message.content.startswith('인사토끼'):
-            await message.channel.send(f" /)/)\n\('   ')/\n (     )")
-        else:
-            await message.channel.send(f"/)/)\n('   ')\n(     )")
+        global rabbit_msg
+        rabbit_msg = await message.channel.send(f"/)/)\n('   ')\n(     )")
+        await rabbit_msg.add_reaction('👋')
         
     
     if message.content.startswith('졸려'):
@@ -328,6 +327,16 @@ async def on_raw_reaction_add(payload):
     if str(payload.emoji) == '⭕' and payload.user_id != client.user.id and payload.user_id != 885419823499214859:
         o_msg = await client.get_channel(892220976228618270).send(f'<@{payload.user_id}> 참가! ({o_msg_st.content[1:]})')
         o_msg_dic[payload.user_id] = o_msg
+    if str(payload.emoji) == '👋' and payload.user_id != client.user.id and payload.user_id != 885419823499214859:
+        for i in range(1,3):
+            await rabbit_msg.edit(content=f' /)/)\n('   ')-\n(     )')
+            time.sleep(0.3)
+            await rabbit_msg.edit(content=f' /)/)\n('   ')\\n(     )')
+            time.sleep(0.3)
+            await rabbit_msg.edit(content=f' /)/)\n('   ')-\n(     )')
+            time.sleep(0.3)
+            await rabbit_msg.edit(content=f' /)/)\n('   ')/\n(     )')
+        await message.remove_reaction('👋', payload.member)
 
 @client.event
 async def on_raw_reaction_remove(payload): 
