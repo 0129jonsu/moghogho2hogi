@@ -24,7 +24,7 @@ async def on_ready():
     print('We have logged in as {0.user}'.format(client))
     await client.change_presence(activity=discord.Game(name="명령어!"))
     
-    class stone_data:
+class stone_data:
     def __init__(self):
         self.각인1 = ['◇','◇','◇','◇','◇','◇','◇','◇','◇','◇']
         self.각인2 = ['◇','◇','◇','◇','◇','◇','◇','◇','◇','◇']
