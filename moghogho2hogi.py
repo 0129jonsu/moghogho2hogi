@@ -281,11 +281,11 @@ async def on_reaction_add(reaction, user):
 #돌깎기 -----------------------------
     if str(reaction.emoji) == "☝️" or str(reaction.emoji) == "✌️" or str(reaction.emoji) == "👎":
         if str(reaction.emoji) == "☝️":
-                stone_dic[user.id].stone_start(stone_dic[user.id].각인1)
+            stone_dic[user.id].stone_start(stone_dic[user.id].각인1)
         if str(reaction.emoji) == "✌️":
-                stone_dic[user.id].stone_start(stone_dic[user.id].각인2)
+            stone_dic[user.id].stone_start(stone_dic[user.id].각인2)
         if str(reaction.emoji) == "👎":
-                stone_dic[user.id].stone_start(stone_dic[user.id].감소)
+            stone_dic[user.id].stone_start(stone_dic[user.id].감소)
            
         if len(stone_dic[user.id].각인1) + len(stone_dic[user.id].각인2) + len(stone_dic[user.id].감소) == 30:
             await stone_dic[user.id].stone_msg.edit(content=f"★돌 시뮬★ \n 각인1☝️  : {stone_dic[user.id].각인1} \n 각인2✌️ : {stone_dic[user.id].각인2} \n 감소 👎  : {stone_dic[user.id].감소} \n 확률 : {stone_dic[user.id].pbb_base}%")
