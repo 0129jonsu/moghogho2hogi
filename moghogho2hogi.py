@@ -335,17 +335,17 @@ o_msg_dic = {}
 async def on_raw_reaction_add(payload):
     channel = await client.fetch_channel(payload.channel_id)
     message = await channel.fetch_message(payload.message_id)
-    if str(payload.emoji) == '☝️' and payload.user_id != client.user.id:
+    if str(payload.emoji) == '☝️' and payload.user_id != client.user.id and payload.user_id != 885419823499214859:
         await message.remove_reaction('☝️', payload.member)
-    if str(payload.emoji) == '✌️' and payload.user_id != client.user.id:
+    if str(payload.emoji) == '✌️' and payload.user_id != client.user.id and payload.user_id != 885419823499214859:
         await message.remove_reaction('✌️', payload.member)
-    if str(payload.emoji) == '👎' and payload.user_id != client.user.id:
+    if str(payload.emoji) == '👎' and payload.user_id != client.user.id and payload.user_id != 885419823499214859:
         await message.remove_reaction('👎', payload.member)
-    if str(payload.emoji) == '👍' and payload.user_id != client.user.id:
+    if str(payload.emoji) == '👍' and payload.user_id != client.user.id and payload.user_id != 885419823499214859:
         await message.remove_reaction('👍', payload.member)
-    if str(payload.emoji) == '👏' and payload.user_id != client.user.id:
+    if str(payload.emoji) == '👏' and payload.user_id != client.user.id and payload.user_id != 885419823499214859:
         await message.remove_reaction('👏', payload.member)
-    if str(payload.emoji) == '⭕' and payload.user_id != client.user.id:
+    if str(payload.emoji) == '⭕' and payload.user_id != client.user.id and payload.user_id != 885419823499214859:
         o_msg = await client.get_channel(892220976228618270).send(f'<@{payload.user_id}> 참가! ({o_msg_st.content[1:]})')
         o_msg_dic[payload.user_id] = o_msg
 
