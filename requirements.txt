@@ -1,5 +1,4 @@
 discord.py==1.7.3
-request.py==2.26.00
 beautifulsoup4.py==4.10.0
-requests.py==1.21.1
+requests.py==2.26.0
 selenium.py==3.141.0
