@@ -4,6 +4,10 @@ from discord import channel
 from discord.ext import commands
 from discord.ext.commands import Bot
 import os
+import bs4
+import urllib
+import requests
+import re
 
 client = discord.Client()
 
@@ -68,6 +72,35 @@ class stone_data:
 async def on_message(message):
     if message.author == client.user:
         return
+    
+    if message.content.startswith('검색! '):
+        nickname = message.content[4:]
+        nickname = urllib.parse.quote(nickname)
+        
+        url = f'https://lostark.game.onstove.com/Profile/Character/{nickname}'
+        response = requests.get(url)
+        html = response.text
+        soup = bs4.BeautifulSoup(html, 'html.parser')
+        #아이템레벨
+        user_lv = soup.find('div',{"class":"level-info2__item"}).get_text()
+        user_lv = user_lv[12:]
+        #각인
+        user_ability = soup.main.find("div",{'class':'swiper-wrapper'}).get_text()
+        p_ability = re.compile('.+Lv. +.')
+        user_ability = p_ability.findall(user_ability)
+        #보석
+        user_jewel_list = []
+        p_jewel = re.compile('Lv.+')
+        for i in range(0, 10):
+            user_jewel = soup.main.find('span',{'id':f'gem0{i}'}).get_text()
+            user_jewel = p_jewel.findall(user_jewel)
+            user_jewel_list.append(user_jewel)
+
+        #원정대랩
+        user_expedition = soup.main.find("div",{"class":"level-info__expedition"}).get_text()
+        
+        await message.channel.send(f'{user_lv}\n{user_ability}\n{user_jewel_list}\n{user_expedition}')
+    
     
     if message.content.startswith('빠삐는'):
         await message.channel.send(f'사람을 찢어...!')    
