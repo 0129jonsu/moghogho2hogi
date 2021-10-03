@@ -73,7 +73,7 @@ async def on_message(message):
     if message.author == client.user:
         return
     
-    if message.content.startswith('! '):
+    if message.content.startswith('검색! '):
         nickname_ori = message.content[4:]
         nickname = urllib.parse.quote(nickname_ori)
         print(nickname)
