@@ -88,9 +88,12 @@ async def on_message(message):
         if user_search != None:
             await message.channel.send(f'({nickname_ori})캐릭터 정보가 없습니다. 캐릭터명을 확인해주세요.')
         else:
+            #전투레벨
+            user_lv = soup.find('div',{'class':'level-info__item'}).get_text()[8:]
+
             #아이템레벨
-            user_lv = soup.find('div',{"class":"level-info2__item"}).get_text()
-            user_lv = user_lv[12:]
+            item_lv = soup.find('div',{"class":"level-info2__item"}).get_text()
+            item_lv = item_lv[12:]
             #각인
             user_ability = soup.main.find("div",{'class':'swiper-wrapper'})
             if user_ability == None:
@@ -99,6 +102,7 @@ async def on_message(message):
                 user_ability = user_ability.get_text()
                 p_ability = re.compile('.+Lv. +.')
                 user_ability = p_ability.findall(user_ability)
+                user_ability = "\n".join(user_ability)
             #보석
             user_jewel_list = []
             p_jewel = re.compile('Lv.+')
@@ -111,23 +115,33 @@ async def on_message(message):
                         user_jewel = soup.main.find('span',{'id':f'gem0{i}'}).get_text()
                     if user_jewel == None:
                         break
-                    user_jewel = p_jewel.findall(user_jewel)
+                    user_jewel = "".join(p_jewel.findall(user_jewel))
                     user_jewel_list.append(user_jewel)
                 except AttributeError as ex: 
                     jewel_count += 1
-            if jewel_count != 0:
-                await message.channel.send(f'※주의 보석 {jewel_count}개 없음※')
+            user_jewel_list = " ".join(user_jewel_list)
+            user_jewel_list = user_jewel_list.replace('Lv.','')
+
             #원정대랩
             user_expedition = soup.main.find("div",{"class":"level-info__expedition"}).get_text()
+            user_expedition = user_expedition[9:]
             
             #특성
             p_character = re.compile('특화 .\d{2,3}|신속 .\d{2,3}|치명 .\d{2,3}')
             user_character = soup.main.find('div', {'class':'profile-ability-battle'}).get_text()
             user_character = p_character.findall(user_character)
+            user_character = " ".join(user_character)
             print(f'전투 특성 : {user_character}')
 
             #출력
-            await message.channel.send(f'{user_lv}\n{user_ability}\n{user_jewel_list}\n{user_character}\n{user_expedition}')
+            embed = discord.Embed(title=f"{nickname_ori}", color=0x62c1cc)
+            embed.add_field(name = "전투 레벨", value = f"{user_lv}", inline=True)
+            embed.add_field(name = "아이템 레벨", value = f"{item_lv}", inline=True)
+            embed.add_field(name = "원정대 레벨", value = f"{user_expedition}", inline=True)
+            embed.add_field(name = "각인", value = f"{user_ability}", inline=True)
+            embed.add_field(name = "보석", value = f"※보석{jewel_count}개 없음※\n{user_jewel_list}", inline=True)
+            embed.add_field(name = "특성", value = f"{user_character}", inline=True)
+            await message.channel.send(embed=embed)
 
     if message.content.startswith('빠삐는'):
         await message.channel.send(f'사람을 찢어...!')    
