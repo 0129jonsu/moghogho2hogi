@@ -73,9 +73,10 @@ async def on_message(message):
     if message.author == client.user:
         return
     
-    if message.content.startswith('검색! '):
+    if message.content.startswith('! '):
         nickname_ori = message.content[4:]
         nickname = urllib.parse.quote(nickname_ori)
+        print(nickname)
         
         url = f'https://lostark.game.onstove.com/Profile/Character/{nickname}'
         response = requests.get(url)
@@ -114,9 +115,16 @@ async def on_message(message):
                 await message.channel.send(f'※주의 보석 {jewel_count}개 없음※')
             #원정대랩
             user_expedition = soup.main.find("div",{"class":"level-info__expedition"}).get_text()
-            await message.channel.send(f'{user_lv}\n{user_ability}\n{user_jewel_list}\n{user_expedition}')
+            
+            #특성
+            p_character = re.compile('\w+ .\d{2,3}')
+            user_character = soup.main.find('div', {'class':'profile-ability-battle'}).get_text()
+            user_character = p_character.findall(user_character)
+            print(f'전투 특성 : {user_character}')
 
-    
+            #출력
+            await message.channel.send(f'{user_lv}\n{user_ability}\n{user_jewel_list}\n{user_character}\n{user_expedition}')
+
     if message.content.startswith('빠삐는'):
         await message.channel.send(f'사람을 찢어...!')    
     
