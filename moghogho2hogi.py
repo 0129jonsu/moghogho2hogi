@@ -76,7 +76,6 @@ async def on_message(message):
     if message.content.startswith('검색! '):
         nickname_ori = message.content[4:]
         nickname = urllib.parse.quote(nickname_ori)
-        print(nickname)
         
         url = f'https://lostark.game.onstove.com/Profile/Character/{nickname}'
         response = requests.get(url)
@@ -84,7 +83,6 @@ async def on_message(message):
         soup = bs4.BeautifulSoup(html, 'html.parser')
 
         user_search = soup.body.find('div', {"class":"profile-attention"})
-        print(user_search)
         jewel_count = 0
         if user_search != None:
             await message.channel.send(f'({nickname_ori})캐릭터 정보가 없습니다. 캐릭터명을 확인해주세요.')
@@ -108,7 +106,6 @@ async def on_message(message):
                         user_jewel = soup.main.find('span',{'id':f'gem0{i}'}).get_text()
                     if user_jewel == None:
                         break
-                    print(f'{i} : {user_jewel}')
                     user_jewel = p_jewel.findall(user_jewel)
                     user_jewel_list.append(user_jewel)
                 except AttributeError as ex: 
