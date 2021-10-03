@@ -144,7 +144,10 @@ async def on_message(message):
             embed.add_field(name = "아이템 레벨", value = f"{item_lv}", inline=True)
             embed.add_field(name = "원정대 레벨", value = f"{user_expedition}", inline=True)
             embed.add_field(name = "각인", value = f"{user_ability}", inline=True)
-            embed.add_field(name = "보석", value = f"※보석{jewel_count}개 없음※\n{user_jewel_list}", inline=True)
+            if jewel_count != 0:
+                embed.add_field(name = "보석", value = f"※보석{jewel_count}개 없음※\n{user_jewel_list}", inline=True)
+            else:
+                embed.add_field(name = "보석", value = f"{user_jewel_list}", inline=True)
             embed.add_field(name = "특성", value = f"{user_character}", inline=True)
             await message.channel.send(embed=embed)
 
