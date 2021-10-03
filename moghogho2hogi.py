@@ -73,16 +73,19 @@ async def on_message(message):
     if message.author == client.user:
         return
     
-    if message.content.startswith('검색! '):
+    if message.content.startswith('ㅇㅇ! '):
         nickname_ori = message.content[4:]
         nickname = urllib.parse.quote(nickname_ori)
+        print(nickname)
         
         url = f'https://lostark.game.onstove.com/Profile/Character/{nickname}'
         response = requests.get(url)
         html = response.text
         soup = bs4.BeautifulSoup(html, 'html.parser')
-        
+
         user_search = soup.body.find('div', {"class":"profile-attention"})
+        print(user_search)
+        jewel_count = 0
         if user_search != None:
             await message.channel.send(f'({nickname_ori})캐릭터 정보가 없습니다. 캐릭터명을 확인해주세요.')
         else:
@@ -96,11 +99,22 @@ async def on_message(message):
             #보석
             user_jewel_list = []
             p_jewel = re.compile('Lv.+')
-            for i in range(0, 10):
-                user_jewel = soup.main.find('span',{'id':f'gem0{i}'}).get_text()
-                user_jewel = p_jewel.findall(user_jewel)
-                user_jewel_list.append(user_jewel)
-
+            
+            for i in range(0, 11):
+                try:
+                    if i == 10:
+                        user_jewel = soup.main.find('span',{'id':f'gem{i}'}).get_text()
+                    else:
+                        user_jewel = soup.main.find('span',{'id':f'gem0{i}'}).get_text()
+                    if user_jewel == None:
+                        break
+                    print(f'{i} : {user_jewel}')
+                    user_jewel = p_jewel.findall(user_jewel)
+                    user_jewel_list.append(user_jewel)
+                except AttributeError as ex: 
+                    jewel_count += 1
+            if jewel_count != 0:
+                await message.channel.send(f'※주의 보석 {jewel_count}개 없음※')
             #원정대랩
             user_expedition = soup.main.find("div",{"class":"level-info__expedition"}).get_text()
             await message.channel.send(f'{user_lv}\n{user_ability}\n{user_jewel_list}\n{user_expedition}')
