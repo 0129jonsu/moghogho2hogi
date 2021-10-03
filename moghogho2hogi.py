@@ -74,17 +74,18 @@ async def on_message(message):
         return
     
     if message.content.startswith('검색! '):
+        nickname_ori = message.content[4:
         nickname = message.content[4:]
-        nickname = urllib.parse.quote(nickname)
+        nickname = urllib.parse.quote(nickname_ori)
         
-        url = f'https://lostark.game.onstove.com/Profile/Character/{nickname}'
+        url = f'https://lostark.game.onstove.com/Profile/Character/{nickname_ori}'
         response = requests.get(url)
         html = response.text
         soup = bs4.BeautifulSoup(html, 'html.parser')
         
         user_search = soup.find('div', {"class":"profile-attention"})
         if user_search != None:
-            await message.channel.send(f'({nickname})캐릭터 정보가 없습니다. 캐릭터명을 확인해주세요.')
+            await message.channel.send(f'({nickname_ori})캐릭터 정보가 없습니다. 캐릭터명을 확인해주세요.')
         else:
             #아이템레벨
             user_lv = soup.find('div',{"class":"level-info2__item"}).get_text()
