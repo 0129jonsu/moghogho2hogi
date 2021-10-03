@@ -319,7 +319,7 @@ async def on_reaction_add(reaction, user):
                         rf_pbb = 100
                         await rf_msg2.edit(content=f'강화를 실패하였습니다! {user_item}+{tmp_lv} -> {user_item}+{user_item_lv}')
             else:
-                print('error 강화 error 강화 error 강화')
+                pass
             await rf_msg.edit(content=f'{user_item}+{user_item_lv}을(를) 강화합니다. 확률 : {rf_pbb}%')
 
     if str(reaction.emoji) == "👏":
@@ -403,7 +403,7 @@ async def on_raw_reaction_remove(payload):
         if str(payload.emoji) == '⭕' and payload.user_id != client.user.id:
             await o_msg_dic[payload.user_id].delete()
     except KeyError as e:
-            print(f'{e} : 에러에러에러')
+            pass
 
 access_token = os.environ['BOT_TOKEN']
 client.run(access_token)
