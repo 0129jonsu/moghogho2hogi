@@ -128,10 +128,15 @@ async def on_message(message):
             
             #특성
             p_character = re.compile('특화 .\d{2,3}|신속 .\d{2,3}|치명 .\d{2,3}')
-            user_character = soup.main.find('div', {'class':'profile-ability-battle'}).get_text()
-            user_character = p_character.findall(user_character)
-            user_character = " ".join(user_character)
-            print(f'전투 특성 : {user_character}')
+            user_character = soup.main.find('div', {'class':'profile-ability-battle'})
+            print(user_character)
+            if user_ability == None:
+                user_character = None
+            else:
+                user_character = user_character.get_text()
+                user_character = p_character.findall(user_character)
+                user_character = " ".join(user_character)
+                print(f'전투 특성 : {user_character}')
 
             #출력
             embed = discord.Embed(title=f"{nickname_ori}", color=0x62c1cc)
