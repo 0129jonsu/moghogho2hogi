@@ -82,7 +82,7 @@ async def on_message(message):
         html = response.text
         soup = bs4.BeautifulSoup(html, 'html.parser')
         
-        user_search = soup.find('bott', {"class":"profile-attention"})
+        user_search = soup.find('div', {"class":"profile-attention"})
         if user_search != None:
             await message.channel.send(f'({nickname})캐릭터 정보가 없습니다. 캐릭터명을 확인해주세요.')
         else:
