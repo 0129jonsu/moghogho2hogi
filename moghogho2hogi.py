@@ -92,9 +92,13 @@ async def on_message(message):
             user_lv = soup.find('div',{"class":"level-info2__item"}).get_text()
             user_lv = user_lv[12:]
             #각인
-            user_ability = soup.main.find("div",{'class':'swiper-wrapper'}).get_text()
-            p_ability = re.compile('.+Lv. +.')
-            user_ability = p_ability.findall(user_ability)
+            user_ability = soup.main.find("div",{'class':'swiper-wrapper'})
+            if user_ability == None:
+                pass
+            else:
+                user_ability = user_ability.get_text()
+                p_ability = re.compile('.+Lv. +.')
+                user_ability = p_ability.findall(user_ability)
             #보석
             user_jewel_list = []
             p_jewel = re.compile('Lv.+')
