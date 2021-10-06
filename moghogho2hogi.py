@@ -20,6 +20,8 @@ o_msg_dic = {}
 stone_dic = {}
 
 #⭕ 변수
+global o_dic
+o_dic = {}
 
 
 #실행 확인
@@ -66,7 +68,13 @@ class stone_data:
                 g.insert(found_index,self.pass_or_fail)
                 if self.pbb_base < 75:
                     self.pbb_base += 10
-
+class party:
+    def __init__(self, mm):
+        self.main_msg = mm
+        self.msg_dic = {}
+        
+    def set_data(self, uid, om):
+        self.msg_dic[uid] = om 
 
 @client.event
 async def on_message(message):
@@ -168,10 +176,8 @@ async def on_message(message):
         await message.channel.send(f'잘자요')
 
     if message.content.startswith('$'):
-        global o_msg_st
-        o_msg_st = message
-        print(f"{o_msg_st}")
-        await o_msg_st.add_reaction('⭕')
+        o_dic[message.id] = party(message)
+        await message.add_reaction('❌')
 
 
     if message.content.startswith('강화!'):
@@ -400,7 +406,6 @@ async def on_reaction_add(reaction, user):
 
 
 #사용자 이모지 자동 제거
-global o_msg
 
 @client.event
 async def on_raw_reaction_add(payload):
@@ -417,8 +422,8 @@ async def on_raw_reaction_add(payload):
     if str(payload.emoji) == '👏' and payload.user_id != client.user.id and payload.user_id != 885419823499214859:
         await message.remove_reaction('👏', payload.member)
     if str(payload.emoji) == '⭕' and payload.user_id != client.user.id and payload.user_id != 885419823499214859:
-        o_msg = await client.get_channel(892220976228618270).send(f'<@{payload.user_id}> 참가! ({o_msg_st.content[1:]})')
-        o_msg_dic[payload.user_id] = o_msg
+        o_msg = await client.get_channel(892220976228618270).send(f'<@{payload.user_id}> 참가! ({o_dic[payload.message_id].main_msg.content[1:]})')
+        o_dic[payload.message_id].set_data(payload.user_id, o_msg)
     if str(payload.emoji) == '👋' and payload.user_id != client.user.id and payload.user_id != 885419823499214859:
         for i in range(1,3):
             time.sleep(0.3)
@@ -440,7 +445,7 @@ async def on_raw_reaction_add(payload):
 async def on_raw_reaction_remove(payload): 
     try:
         if str(payload.emoji) == '⭕' and payload.user_id != client.user.id:
-            await o_msg_dic[payload.user_id].delete()
+            await o_dic[payload.message_id].msg_dic[payload.user_id].delete()
     except KeyError as e:
             pass
 
