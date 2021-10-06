@@ -305,11 +305,16 @@ async def on_message(message):
             await message.channel.send('호'*a)
             
 #'ㅋㅋㅋㅋ' 응답
-    if message.content.startswith('ㅋㅋㅋㅋ'):
-        if message.author.id == 279906131017465857:
-            await message.channel.send(f'<@{message.author.id}>쪼개?')
+    if message.content.startswith('ㅋ') or message.content.endswith('ㅋ'):
+        p_zz = re.compile('ㅋㅋㅋㅋ')
+        m_zz = p_zz.search(message.content)
+        if m_zz != None:
+            if message.author.id == 279906131017465857:
+                await message.channel.send(f'<@{message.author.id}>쪼개?')
+            else:
+                await message.channel.send('ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ')
         else:
-            await message.channel.send('ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ')
+            pass
 #명령어 리스트 출력
     if message.content.startswith('명령어!'):
        await message.channel.send('명령어 list : 돌깎자!, 뭐먹, 대답, 2호기, 오늘도, 니얼굴, 야, ㅋㅋㅋㅋ, 가위바위보 ?, 강화!, 토끼, $')
