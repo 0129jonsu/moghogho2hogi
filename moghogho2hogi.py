@@ -80,7 +80,37 @@ class party:
 async def on_message(message):
     if message.author == client.user:
         return
-    
+   
+
+    if message.content.startswith('돈명령어!'):
+        await message.channel.send(f'시작!(계정을 등록하고 10000$를 드립니다.)\n잔고!(돈을 확인합니다.')
+
+    if message.content.startswith('시작!'):
+        f = open("money.txt", "r")
+        lines = f.readlines()
+        lines_str = "".join(lines)
+        f.close()
+        if lines_str.find(str(message.author.id)) != -1:
+            await message.channel.send(f'이미 등록되어있습니다.')
+        else:
+            f = open("money.txt", "a")
+            data = f'{message.author.name} {message.author.id} : 10000\n'
+            f.write(data)
+            f.close()
+
+    if message.content.startswith('잔고!'):
+        f = open("money.txt", "r")
+        lines = f.readlines()
+        lines_str = "".join(lines)
+        f.close
+        p_bal = re.compile(f'{message.author.id} : \d*')
+        bal = p_bal.findall(lines_str)
+        if bal == []:
+            await message.channel.send(f'등록되지 않은 계정입니다.')
+        else:
+            await message.channel.send(f'잔고 : {bal}')
+
+            
     if message.content.startswith('검색! '):
         nickname_ori = message.content[4:]
         nickname = urllib.parse.quote(nickname_ori)
