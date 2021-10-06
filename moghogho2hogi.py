@@ -177,7 +177,7 @@ async def on_message(message):
 
     if message.content.startswith('$'):
         o_dic[message.id] = party(message)
-        await message.add_reaction('❌')
+        await message.add_reaction('⭕')
 
 
     if message.content.startswith('강화!'):
