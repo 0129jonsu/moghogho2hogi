@@ -120,8 +120,8 @@ async def on_message(message):
         html = response.text
         soup = bs4.BeautifulSoup(html, 'html.parser')
         #전투정보실 체크
-        check = soup.find('div',{'class':'info'}).get_text()
-        if check.find('서비스 점검 중 입니다.') != -1:
+        check = soup.find('div',{'class':'info'})
+        if check != None:
             await message.channel.send(f'로스트아크 전투정보실 점검 중 입니다.')
         else:
             user_search = soup.body.find('div', {"class":"profile-attention"})
