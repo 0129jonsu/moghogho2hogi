@@ -289,8 +289,10 @@ async def on_message(message):
     if message.content.startswith('뭐먹'):
         food = ['치킨','피자','중식','초밥','떡볶이','햄버거','족발보쌈','갈비탕','돈까스','회','찜닭','삼겹살','편의점','컵라면','굶어','국밥','냉면','파스타','마라탕']
         if message.content.endswith(' 추가'):
-            food.append('message.content[3:-3')
-        if message.content == '뭐먹리스트':
+            food.append(message.content[3:-3])
+        elif message.content.endswith(' 삭제'):
+            food.remove(message.content[3:-3])
+        elif message.content == '뭐먹리스트':
             await message.channel.send(f'{food}')
         else:
             choice_food = random.choice(food)
