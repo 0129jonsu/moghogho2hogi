@@ -291,12 +291,13 @@ async def on_message(message):
 # food = ['치킨','피자','중식','초밥','떡볶이','햄버거','족발보쌈','갈비탕','돈까스','회','찜닭','삼겹살','편의점','컵라면','굶어','국밥','냉면','파스타','마라탕']
     if message.content.startswith('뭐먹'):
         if message.content.endswith(' 추가'):
-            if food.find(message.content[3:-3]) != -1:
-                food.append(message.content[3:-3])
-                await message.channel.send(f'{message.content[3:-3]}(이)가 추가되었습니다.')
-            else:
+            try:
+                food.index(message.content[3:-3])
                 await message.channel.send(f'이미 존재하는 음식입니다.({message.content[3:-3]})')
-        
+            except ValueError as ex:
+                food.append(message.content[3:-3])
+                await message.channel.send(f'{message.content[3:-3]}(이)가 추가되었습니다.') 
+                
         elif message.content.endswith(' 삭제'):
             try:
                 food.remove(message.content[3:-3])
