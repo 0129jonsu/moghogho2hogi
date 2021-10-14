@@ -293,11 +293,14 @@ async def on_message(message):
         if message.content.endswith(' 추가'):
             food.append(message.content[3:-3])
             await message.channel.send(f'{message.content[3:-3]}(이)가 추가되었습니다.')
-        elif message.content.endswith(' 삭제'):
-            food.remove(message.content[3:-3])
-            await message.channel.send(f'{message.content[3:-3]}(이)가 삭제되었습니다.')
+        try:
+            elif message.content.endswith(' 삭제'):
+                food.remove(message.content[3:-3])
+                await message.channel.send(f'{message.content[3:-3]}(이)가 삭제되었습니다.')
+        except ValueError as ex:
+            await message.channel.send(f'{message.content[3:-3]}(이)가 리스트에 존재하지 않습니다.')
         elif message.content == '뭐먹리스트':
-            await message.channel.send(f'{food}')
+            await message.channel.send(f'{message.content[3:-3]}')
         else:
             choice_food = random.choice(food)
             await message.channel.send(f"2hogi's pick : ★{choice_food}★")
