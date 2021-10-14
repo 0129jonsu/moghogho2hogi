@@ -23,6 +23,9 @@ stone_dic = {}
 global o_dic
 o_dic = {}
 
+#음식
+global food
+food = ['치킨','피자','중식','초밥','떡볶이','햄버거','족발보쌈','갈비탕','돈까스','회','찜닭','삼겹살','편의점','컵라면','굶어','국밥','냉면','파스타','마라탕']
 
 #실행 확인
 @client.event
@@ -285,13 +288,14 @@ async def on_message(message):
                 await message.channel.send(f'{lsp_client}! 당신은 비겼습니다.')
 
 #'뭐먹' 응답
-   
+# food = ['치킨','피자','중식','초밥','떡볶이','햄버거','족발보쌈','갈비탕','돈까스','회','찜닭','삼겹살','편의점','컵라면','굶어','국밥','냉면','파스타','마라탕']
     if message.content.startswith('뭐먹'):
-        food = ['치킨','피자','중식','초밥','떡볶이','햄버거','족발보쌈','갈비탕','돈까스','회','찜닭','삼겹살','편의점','컵라면','굶어','국밥','냉면','파스타','마라탕']
         if message.content.endswith(' 추가'):
             food.append(message.content[3:-3])
+            await message.channel.send(f'{message.content[3:-3]}(이)가 추가되었습니다.')
         elif message.content.endswith(' 삭제'):
             food.remove(message.content[3:-3])
+            await message.channel.send(f'{message.content[3:-3]}(이)가 삭제되었습니다.')
         elif message.content == '뭐먹리스트':
             await message.channel.send(f'{food}')
         else:
