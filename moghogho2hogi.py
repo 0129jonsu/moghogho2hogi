@@ -332,7 +332,7 @@ async def on_message(message):
        await message.channel.send('why?')
 #'오늘도' 응답     
     if message.content.startswith('오늘도'):
-        await message.channel.send('화이팅!')
+        await message.channel.send('파이팅!')
 #'니얼굴' 응답
     if message.content.startswith('니얼굴'):
          if message.author.id == 279906131017465857:
