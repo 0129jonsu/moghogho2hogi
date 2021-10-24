@@ -226,7 +226,7 @@ async def on_message(message):
         await stone_dic[add_user].stone_msg.add_reaction('✌️')
         await stone_dic[add_user].stone_msg.add_reaction('👎')
 
-#가위바위보-----------------------------
+#가위바위보----------------------------
     if message.content.startswith('가위바위보'):
         lsp_user = ''
         lsp_list=['가위','바위','보']
