@@ -321,7 +321,7 @@ async def on_message(message):
         await message.channel.send('명령어 list : 돌깎자!, 뭐먹, 대답, 2호기, 오늘도, 니얼굴, 야, ㅋㅋㅋㅋ, 가위바위보 ?, 강화!, 토끼, $')
                 
         
-#로아 돌깎기---------------
+#로아 돌깎기-------------
 @client.event
 async def on_reaction_add(reaction, user):
     if user.bot == 1:
