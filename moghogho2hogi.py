@@ -206,7 +206,31 @@ async def on_message(message):
             rf_msg2 = await message.channel.send(f'8강 이상에서 👏을 누르시면 명예의템당에 등록됩니다.\n등록시 아이템은 +0이 됩니다.')
             await rf_msg.add_reaction('👍')
             await rf_msg.add_reaction('👏')
-        
+            
+#'뭐먹' 응답
+# food = ['치킨','피자','중식','초밥','떡볶이','햄버거','족발보쌈','갈비탕','돈까스','회','찜닭','삼겹살','편의점','컵라면','굶어','국밥','냉면','파스타','마라탕']
+    if message.content.startswith('뭐먹'):
+        if message.content.endswith(' 추가'):
+            try:
+                food.index(message.content[3:-3])
+                await message.channel.send(f'이미 존재하는 음식입니다.({message.content[3:-3]})')
+            except ValueError as ex:
+                food.append(message.content[3:-3])
+                await message.channel.send(f'{message.content[3:-3]}(이)가 추가되었습니다.') 
+                
+        elif message.content.endswith(' 삭제'):
+            try:
+                food.remove(message.content[3:-3])
+                await message.channel.send(f'{message.content[3:-3]}(이)가 삭제되었습니다.')
+            except ValueError as ex:
+                await message.channel.send(f'{message.content[3:-3]}(이)가 리스트에 존재하지 않습니다.')
+        elif message.content == '뭐먹리스트':
+            await message.channel.send(f'{food}')
+        else:
+            choice_food = random.choice(food)
+            await message.channel.send(f"2hogi's pick : ★{choice_food}★")
+            
+            
 #가위바위보----------------------------
     if message.content.startswith('가위바위보'):
         lsp_user = ''
@@ -254,29 +278,6 @@ async def on_message(message):
         await stone_dic[add_user].stone_msg.add_reaction('☝️')
         await stone_dic[add_user].stone_msg.add_reaction('✌️')
         await stone_dic[add_user].stone_msg.add_reaction('👎')
-
-#'뭐먹' 응답
-# food = ['치킨','피자','중식','초밥','떡볶이','햄버거','족발보쌈','갈비탕','돈까스','회','찜닭','삼겹살','편의점','컵라면','굶어','국밥','냉면','파스타','마라탕']
-    if message.content.startswith('뭐먹'):
-        if message.content.endswith(' 추가'):
-            try:
-                food.index(message.content[3:-3])
-                await message.channel.send(f'이미 존재하는 음식입니다.({message.content[3:-3]})')
-            except ValueError as ex:
-                food.append(message.content[3:-3])
-                await message.channel.send(f'{message.content[3:-3]}(이)가 추가되었습니다.') 
-                
-        elif message.content.endswith(' 삭제'):
-            try:
-                food.remove(message.content[3:-3])
-                await message.channel.send(f'{message.content[3:-3]}(이)가 삭제되었습니다.')
-            except ValueError as ex:
-                await message.channel.send(f'{message.content[3:-3]}(이)가 리스트에 존재하지 않습니다.')
-        elif message.content == '뭐먹리스트':
-            await message.channel.send(f'{food}')
-        else:
-            choice_food = random.choice(food)
-            await message.channel.send(f"2hogi's pick : ★{choice_food}★")
 
 #로또 번호 
     if message.content.startswith('/lotto'):
