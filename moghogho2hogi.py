@@ -318,7 +318,7 @@ async def on_message(message):
     
 #명령어 리스트 출력
     if message.content.startswith('명령어!'):
-       await message.channel.send('명령어 list : 돌깎자!, 뭐먹, 대답, 2호기, 오늘도, 니얼굴, 야, ㅋㅋㅋㅋ, 가위바위보 ?, 강화!, 토끼, $')
+        await message.channel.send('명령어 list : 돌깎자!, 뭐먹, 대답, 2호기, 오늘도, 니얼굴, 야, ㅋㅋㅋㅋ, 가위바위보 ?, 강화!, 토끼, $')
                 
         
 #로아 돌깎기---------------
