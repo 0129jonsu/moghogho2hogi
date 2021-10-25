@@ -342,20 +342,16 @@ async def on_message(message):
         await stone_dic[add_user].stone_msg.add_reaction('✌️')
         await stone_dic[add_user].stone_msg.add_reaction('👎')
 
-#로아 돌깎기---------------
+#로아 돌깎기------------
 @client.event
 async def on_reaction_add(reaction, user):
-    
-    if user.bot == 1:
+	if user.bot == 1:
         global rf_pbb
         global user_item_lv
         global user_item
         user_item_lv = 1
         rf_pbb = 90
         return None
-    #test
-    if true:
-        pass
     
     if str(reaction.emoji) == "👍":
         if rf_user == user.id:
