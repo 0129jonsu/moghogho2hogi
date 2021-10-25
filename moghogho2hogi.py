@@ -261,24 +261,7 @@ async def on_message(message):
                 await message.channel.send(f'{lsp_client}! 당신은 이겼습니다.')
             if lsp_client == '보':
                 await message.channel.send(f'{lsp_client}! 당신은 비겼습니다.')
-    #로아 돌깎기---------------
-    if message.content.startswith('돌깎자!'):
-        global add_user
-        add_user = message.author.id
-
-        pbb_base = 75
-        pof = ''
-        각인1 = ['◇','◇','◇','◇','◇','◇','◇','◇','◇','◇']
-        각인2 = ['◇','◇','◇','◇','◇','◇','◇','◇','◇','◇']
-        감소 = ['◇','◇','◇','◇','◇','◇','◇','◇','◇','◇']
-
-        msg = await message.channel.send(f"★돌 시뮬★ <@{add_user}>(이)가 깎는중!\n각인1☝️  : {각인1} \n 각인2✌️ : {각인2} \n 감소 👎  : {감소} \n 확률 : 75%")
-        stone_dic[add_user] = stone_data()
-        stone_dic[add_user].set_stone_msg(msg)
-        await stone_dic[add_user].stone_msg.add_reaction('☝️')
-        await stone_dic[add_user].stone_msg.add_reaction('✌️')
-        await stone_dic[add_user].stone_msg.add_reaction('👎')
-
+                
 #로또 번호 
     if message.content.startswith('/lotto'):
         lotto_num = []
@@ -340,8 +323,24 @@ async def on_message(message):
 #명령어 리스트 출력
     if message.content.startswith('명령어!'):
        await message.channel.send('명령어 list : 돌깎자!, 뭐먹, 대답, 2호기, 오늘도, 니얼굴, 야, ㅋㅋㅋㅋ, 가위바위보 ?, 강화!, 토끼, $')
+                
+    #로아 돌깎기---------------
+    if message.content.startswith('돌깎자!'):
+        global add_user
+        add_user = message.author.id
 
+        pbb_base = 75
+        pof = ''
+        각인1 = ['◇','◇','◇','◇','◇','◇','◇','◇','◇','◇']
+        각인2 = ['◇','◇','◇','◇','◇','◇','◇','◇','◇','◇']
+        감소 = ['◇','◇','◇','◇','◇','◇','◇','◇','◇','◇']
 
+        msg = await message.channel.send(f"★돌 시뮬★ <@{add_user}>(이)가 깎는중!\n각인1☝️  : {각인1} \n 각인2✌️ : {각인2} \n 감소 👎  : {감소} \n 확률 : 75%")
+        stone_dic[add_user] = stone_data()
+        stone_dic[add_user].set_stone_msg(msg)
+        await stone_dic[add_user].stone_msg.add_reaction('☝️')
+        await stone_dic[add_user].stone_msg.add_reaction('✌️')
+        await stone_dic[add_user].stone_msg.add_reaction('👎')
 
 #로아 돌깎기---------------
 @client.event
