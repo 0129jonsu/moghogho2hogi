@@ -342,7 +342,7 @@ async def on_message(message):
         await stone_dic[add_user].stone_msg.add_reaction('✌️')
         await stone_dic[add_user].stone_msg.add_reaction('👎')
 
-#로아 돌깎기------------
+#로아 돌깎기-----------
 @client.event
 async def on_reaction_add(reaction, user):
 	if user.bot == 1:
