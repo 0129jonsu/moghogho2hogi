@@ -345,9 +345,7 @@ async def on_message(message):
 #로아 돌깎기---------------
 @client.event
 async def on_reaction_add(reaction, user):
-    #test
-    if true:
-        pass
+    
     if user.bot == 1:
         global rf_pbb
         global user_item_lv
@@ -355,6 +353,10 @@ async def on_reaction_add(reaction, user):
         user_item_lv = 1
         rf_pbb = 90
         return None
+    #test
+    if true:
+        pass
+    
     if str(reaction.emoji) == "👍":
         if rf_user == user.id:
             pbb_rnd = random.randint(1, 100)
