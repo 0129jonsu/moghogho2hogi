@@ -345,6 +345,8 @@ async def on_message(message):
 #로아 돌깎기---------------
 @client.event
 async def on_reaction_add(reaction, user):
+    print('test')
+    
     if user.bot == 1:
         global rf_pbb
         global user_item_lv
