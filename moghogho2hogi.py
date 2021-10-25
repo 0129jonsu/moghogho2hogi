@@ -183,29 +183,6 @@ async def on_message(message):
         o_dic[message.id] = party(message)
         await message.add_reaction('⭕')
 
-
-    if message.content.startswith('강화!'):
-        global user_item
-        global rf_msg
-        global rf_msg2
-        global user_item_lv
-        global rf_pbb
-        global rf_user
-        global rf_safe
-
-        rf_user = message.author.id
-        user_item = message.content[3:]
-        rf_pbb = 90
-        user_item_lv = 1
-        rf_safe = 3
-
-        if(user_item == ''):
-            await message.channel.send(f'아이템 이름을 정해주세요. ex) 강화! 어떻게무기가하프')
-        else:
-            rf_msg = await message.channel.send(f'{user_item}+{user_item_lv}을(를) 강화합니다. 확률 {rf_pbb}%')
-            rf_msg2 = await message.channel.send(f'8강 이상에서 👏을 누르시면 명예의템당에 등록됩니다.\n등록시 아이템은 +0이 됩니다.')
-            await rf_msg.add_reaction('👍')
-            await rf_msg.add_reaction('👏')
             
 #'뭐먹' 응답
 # food = ['치킨','피자','중식','초밥','떡볶이','햄버거','족발보쌈','갈비탕','돈까스','회','찜닭','삼겹살','편의점','컵라면','굶어','국밥','냉면','파스타','마라탕']
@@ -341,12 +318,12 @@ async def on_message(message):
         await stone_dic[add_user].stone_msg.add_reaction('☝️')
         await stone_dic[add_user].stone_msg.add_reaction('✌️')
         await stone_dic[add_user].stone_msg.add_reaction('👎')
+        
+        
 
 #로아 돌깎기---------------
 @client.event
 async def on_reaction_add(reaction, user):
-    print('test')
-    
     if user.bot == 1:
         global rf_pbb
         global user_item_lv
@@ -377,49 +354,6 @@ async def on_reaction_add(reaction, user):
                     await client.get_channel(890618012883906590).send(f'<@{user.id}>님이 {stone_dic[user.id].각인1.count("🔷")} {stone_dic[user.id].각인2.count("🔷")} {stone_dic[user.id].감소.count("🔷")} 돌을 깎았습니다!')
                     stone_dic[user.id] = ''
                     
-#강화-----------------------------------------------
-    if str(reaction.emoji) == "👍":
-        if rf_user == user.id:
-            pbb_rnd = random.randint(1, 100)
-            if pbb_rnd < rf_pbb:
-                user_item_lv+=1
-                if(rf_pbb >10):
-                    rf_pbb-=10
-                elif(rf_pbb > 1):
-                    rf_pbb-=1
-                else:
-                    pass
-                await rf_msg2.edit(content=f'강화를 성공하였습니다! {user_item}+{user_item_lv-1} -> {user_item}+{user_item_lv}')
-            elif pbb_rnd >= rf_pbb:
-                if(pbb_rnd % 2 == 1 and user_item_lv < 10):
-                    await rf_msg2.edit(content=f'강화를 실패하였습니다! 강화 단계는 유지됩니다! {user_item}+{user_item_lv} -> {user_item}+{user_item_lv}')
-                else:
-                    if(user_item_lv < 6):
-                        tmp_lv = user_item_lv
-                        user_item_lv-=1
-                        rf_pbb +=10
-                        await rf_msg2.edit(content=f'강화를 실패하였습니다! {user_item}+{tmp_lv} -> {user_item}+{user_item_lv}')
-                    else:
-                        tmp_lv = user_item_lv
-                        user_item_lv = 0
-                        rf_pbb = 100
-                        await rf_msg2.edit(content=f'강화를 실패하였습니다! {user_item}+{tmp_lv} -> {user_item}+{user_item_lv}')
-            else:
-                pass
-            await rf_msg.edit(content=f'{user_item}+{user_item_lv}을(를) 강화합니다. 확률 : {rf_pbb}%')
-
-    if str(reaction.emoji) == "👏":
-        if rf_user == user.id:
-            if user_item_lv > 7:
-                await client.get_channel(890645163993624607).send(f'<@{rf_user}>님이 ★{user_item}+{user_item_lv}★을(를) 달성하였습니다!')
-                tmp_lv = user_item_lv
-                user_item_lv = 0
-                rf_pbb = 100
-                await rf_msg2.edit(content=f'★명예의템당에 {user_item}+{tmp_lv}(이)가 등록되었습니다.★\n{user_item}+{tmp_lv} -> {user_item}+{user_item_lv}')
-            else:
-                await rf_msg2.edit(content=f'+8 이상일때 눌러주세요. 현재 +{user_item_lv} 확률 : {rf_pbb}%')
-                await client.get_channel(792887565589282827).send(f'<@{rf_user}>(이)가 말안듣고 8강 아래(+{user_item_lv} 따리)에서 👏을 눌렀어오')
-
 
 #사용자 이모지 자동 제거
 
