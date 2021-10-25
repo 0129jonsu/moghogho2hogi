@@ -207,7 +207,36 @@ async def on_message(message):
             await rf_msg.add_reaction('👍')
             await rf_msg.add_reaction('👏')
         
+#가위바위보----------------------------
+    if message.content.startswith('가위바위보'):
+        lsp_user = ''
+        lsp_list=['가위','바위','보']
+        lsp_client = random.choice(lsp_list)
 
+        if message.content == '가위바위보 가위':
+            lsp = '가위'
+            if lsp_client == '가위':
+                await message.channel.send(f'{lsp_client}! 당신은 비겼습니다.')
+            if lsp_client == '바위':
+                await message.channel.send(f'{lsp_client}! 당신은 졌습니다.')
+            if lsp_client == '보':
+                await message.channel.send(f'{lsp_client}! 당신은 이겼습니다.')
+        if message.content == '가위바위보 바위':
+            lsp = '바위'
+            if lsp_client == '가위':
+                await message.channel.send(f'{lsp_client}! 당신은 이겼습니다.')
+            if lsp_client == '바위':
+                await message.channel.send(f'{lsp_client}! 당신은 비겼습니다.')
+            if lsp_client == '보':
+                await message.channel.send(f'{lsp_client}! 당신은 졌습니다.')
+        if message.content == '가위바위보 보':
+            lsp = '보'
+            if lsp_client == '가위':
+                await message.channel.send(f'{lsp_client}! 당신은 졌습니다.')
+            if lsp_client == '바위':
+                await message.channel.send(f'{lsp_client}! 당신은 이겼습니다.')
+            if lsp_client == '보':
+                await message.channel.send(f'{lsp_client}! 당신은 비겼습니다.')
     #로아 돌깎기---------------
     if message.content.startswith('돌깎자!'):
         global add_user
