@@ -342,7 +342,6 @@ async def on_reaction_add(reaction, user):
                 else:
                     await client.get_channel(890618012883906590).send(f'<@{user.id}>님이 {stone_dic[user.id].각인1.count("🔷")} {stone_dic[user.id].각인2.count("🔷")} {stone_dic[user.id].감소.count("🔷")} 돌을 깎았습니다!')
                     stone_dic[user.id] = ''
-                    #dddd
         
 #사용자 이모지 자동 제거
 @client.event
