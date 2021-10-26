@@ -158,6 +158,24 @@ async def on_message(message):
                 embed.add_field(name = "특성", value = f"{user_character}", inline=True)
                 await message.channel.send(embed=embed)
 
+#로아 돌깎기---------------
+    if message.content.startswith('돌깎자!'):
+        global add_user
+        add_user = message.author.id
+
+        pbb_base = 75
+        pof = ''
+        각인1 = ['◇','◇','◇','◇','◇','◇','◇','◇','◇','◇']
+        각인2 = ['◇','◇','◇','◇','◇','◇','◇','◇','◇','◇']
+        감소 = ['◇','◇','◇','◇','◇','◇','◇','◇','◇','◇']
+
+        msg = await message.channel.send(f"★돌 시뮬★ <@{add_user}>(이)가 깎는중!\n각인1☝️  : {각인1} \n 각인2✌️ : {각인2} \n 감소 👎  : {감소} \n 확률 : 75%")
+        stone_dic[add_user] = stone_data()
+        stone_dic[add_user].set_stone_msg(msg)
+        await stone_dic[add_user].stone_msg.add_reaction('☝️')
+        await stone_dic[add_user].stone_msg.add_reaction('✌️')
+        await stone_dic[add_user].stone_msg.add_reaction('👎')
+                
     if message.content.startswith('빠삐는'):
         await message.channel.send(f'사람을 찢어...!')    
     
