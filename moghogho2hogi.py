@@ -310,7 +310,6 @@ async def on_message(message):
         
 @client.event
 async def on_reaction_add(reaction, user):
-    pass
     if user.bot == 1:
         global rf_pbb
         global user_item_lv
