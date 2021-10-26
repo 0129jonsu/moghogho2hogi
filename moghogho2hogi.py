@@ -158,7 +158,7 @@ async def on_message(message):
                 embed.add_field(name = "특성", value = f"{user_character}", inline=True)
                 await message.channel.send(embed=embed)
 
-#로아 돌깎기---------------
+     # 로아 어빌리티스톤
     if message.content.startswith('돌깎자!'):
         global add_user
         add_user = message.author.id
