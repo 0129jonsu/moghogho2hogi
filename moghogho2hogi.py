@@ -1,13 +1,8 @@
-import discord, asyncio, random, re, time
+import discord, asyncio, random, re, time, os, bs4, urllib, requests, re
 from discord import message
 from discord import channel
 from discord.ext import commands
 from discord.ext.commands import Bot
-import os
-import bs4
-import urllib
-import requests
-import re
 
 client = discord.Client()
 
@@ -320,8 +315,6 @@ async def on_message(message):
     if message.content.startswith('명령어!'):
         await message.channel.send('명령어 list : 돌깎자!, 뭐먹, 대답, 2호기, 오늘도, 니얼굴, 야, ㅋㅋㅋㅋ, 가위바위보 ?, 강화!, 토끼, $')
         
-
-
 @client.event
 async def on_reaction_add(reaction, user):
     if user.bot == 1:
