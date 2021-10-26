@@ -320,7 +320,7 @@ async def on_reaction_add(reaction, user):
     if str(reaction.emoji) == "☝️" or str(reaction.emoji) == "✌️" or str(reaction.emoji) == "👎":
         if str(reaction.emoji) == "☝️":
             stone_dic[user.id].stone_start(stone_dic[user.id].각인1)
-            if str(reaction.emoji) == "✌️":
+        if str(reaction.emoji) == "✌️":
             stone_dic[user.id].stone_start(stone_dic[user.id].각인2)
         if str(reaction.emoji) == "👎":
             stone_dic[user.id].stone_start(stone_dic[user.id].감소)
