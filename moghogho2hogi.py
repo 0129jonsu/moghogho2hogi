@@ -167,8 +167,6 @@ async def on_message(message):
         await rabbit_msg.add_reaction('👋')
         await rabbit_msg.add_reaction('😆')
         
-        
-    
     if message.content.startswith('졸려'):
         await message.channel.send(f'잘자요')
     if message.content.startswith('잠와'):
@@ -303,7 +301,7 @@ async def on_message(message):
         각인2 = ['◇','◇','◇','◇','◇','◇','◇','◇','◇','◇']
         감소 = ['◇','◇','◇','◇','◇','◇','◇','◇','◇','◇']
         
-        msg = await message.channel.send(f'★돌 시뮬★ <@{add_user}>(이)가 깎는중!\n각인1☝️  : {각인1} \n 각인2✌️ : {각인2} \n 감소 👎  : {감소} \n 확률 : 75%')
+        msg = await message.channel.send(f"★돌 시뮬★ <@{add_user}>(이)가 깎는중!\n각인1☝️  : {각인1} \n 각인2✌️ : {각인2} \n 감소 👎  : {감소} \n 확률 : 75%")
         stone_dic[add_user] = stone_data()
         stone_dic[add_user].set_stone_msg(msg)
         await stone_dic[add_user].stone_msg.add_reaction('☝️')
@@ -325,7 +323,7 @@ async def on_reaction_add(reaction, user):
     if str(reaction.emoji) == "☝️" or str(reaction.emoji) == "✌️" or str(reaction.emoji) == "👎":
         if str(reaction.emoji) == "☝️":
             stone_dic[user.id].stone_start(stone_dic[user.id].각인1)
-        if str(reaction.emoji) == "✌️":
+            if str(reaction.emoji) == "✌️":
             stone_dic[user.id].stone_start(stone_dic[user.id].각인2)
         if str(reaction.emoji) == "👎":
             stone_dic[user.id].stone_start(stone_dic[user.id].감소)
