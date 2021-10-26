@@ -297,8 +297,12 @@ async def on_message(message):
                 await message.channel.send('ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ')
         else:
             pass
-
-    #로아 돌깎기---------------
+        
+#명령어 리스트 출력
+    if message.content.startswith('명령어!'):
+        await message.channel.send('명령어 list : 돌깎자!, 뭐먹, 대답, 2호기, 오늘도, 니얼굴, 야, ㅋㅋㅋㅋ, 가위바위보 ?, 강화!, 토끼, $')
+        
+#로아 돌깎기---------------
     if message.content.startswith('돌깎자!'):
         global add_user
         add_user = message.author.id
@@ -316,12 +320,8 @@ async def on_message(message):
         await stone_dic[add_user].stone_msg.add_reaction('✌️')
         await stone_dic[add_user].stone_msg.add_reaction('👎')
         
-#명령어 리스트 출력
-    if message.content.startswith('명령어!'):
-        await message.channel.send('명령어 list : 돌깎자!, 뭐먹, 대답, 2호기, 오늘도, 니얼굴, 야, ㅋㅋㅋㅋ, 가위바위보 ?, 강화!, 토끼, $')
-                
 
-#로아 돌깎기-------------
+
 @client.event
 async def on_reaction_add(reaction, user):
     if user.bot == 1:
