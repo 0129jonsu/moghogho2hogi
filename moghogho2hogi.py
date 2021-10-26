@@ -74,81 +74,6 @@ class party:
     def set_data(self, uid, om):
         self.msg_dic[uid] = om 
 
-@client.event
-async def on_reaction_add(reaction, user):
-    if user.bot == 1:
-        global rf_pbb
-        global user_item_lv
-        global user_item
-        user_item_lv = 1
-        rf_pbb = 90
-        return None
-    
-#돌깎기 -----------------------------
-    if str(reaction.emoji) == "☝️" or str(reaction.emoji) == "✌️" or str(reaction.emoji) == "👎":
-        if str(reaction.emoji) == "☝️":
-            stone_dic[user.id].stone_start(stone_dic[user.id].각인1)
-        if str(reaction.emoji) == "✌️":
-            stone_dic[user.id].stone_start(stone_dic[user.id].각인2)
-        if str(reaction.emoji) == "👎":
-            stone_dic[user.id].stone_start(stone_dic[user.id].감소)
-           
-        if len(stone_dic[user.id].각인1) + len(stone_dic[user.id].각인2) + len(stone_dic[user.id].감소) == 30:
-            await stone_dic[user.id].stone_msg.edit(content=f"★돌 시뮬★ <@{add_user}>(이)가 깎는중!\n 각인1☝️  : {stone_dic[user.id].각인1} \n 각인2✌️ : {stone_dic[user.id].각인2} \n 감소 👎  : {stone_dic[user.id].감소} \n 확률 : {stone_dic[user.id].pbb_base}%")
-        if (len(stone_dic[user.id].각인1) + len(stone_dic[user.id].각인2) + len(stone_dic[user.id].감소)) == 30 and '◇' not in stone_dic[user.id].각인1 and '◇' not in stone_dic[user.id].각인2 and '◇' not in stone_dic[user.id].감소:
-            await stone_dic[user.id].stone_msg.edit(content=f"★돌 시뮬★ <@{add_user}>(이)가 깎음!\n 각인1☝️  : {stone_dic[user.id].각인1} \n 각인2✌️ : {stone_dic[user.id].각인2} \n 감소 👎  : {stone_dic[user.id].감소} \n 확률 : {stone_dic[user.id].pbb_base}% \n {stone_dic[user.id].각인1.count('🔷')} {stone_dic[user.id].각인2.count('🔷')} {stone_dic[user.id].감소.count('🔷')} 돌입니다.")
-            if stone_dic[user.id].각인1.count('🔷') + stone_dic[user.id].각인2.count('🔷') > 13:
-                if stone_dic[user.id].각인1.count('🔷') == 8 and stone_dic[user.id].각인2.count('🔷') == 6:
-                    pass
-                elif stone_dic[user.id].각인1.count('🔷') == 6 and stone_dic[user.id].각인2.count('🔷') == 8:
-                    pass
-                else:
-                    await client.get_channel(890618012883906590).send(f'<@{user.id}>님이 {stone_dic[user.id].각인1.count("🔷")} {stone_dic[user.id].각인2.count("🔷")} {stone_dic[user.id].감소.count("🔷")} 돌을 깎았습니다!')
-                    stone_dic[user.id] = ''
-        
-#사용자 이모지 자동 제거
-@client.event
-async def on_raw_reaction_add(payload):
-    channel = await client.fetch_channel(payload.channel_id)
-    message = await channel.fetch_message(payload.message_id)
-    if str(payload.emoji) == '☝️' and payload.user_id != client.user.id and payload.user_id != 885419823499214859:
-        await message.remove_reaction('☝️', payload.member)
-    if str(payload.emoji) == '✌️' and payload.user_id != client.user.id and payload.user_id != 885419823499214859:
-        await message.remove_reaction('✌️', payload.member)
-    if str(payload.emoji) == '👎' and payload.user_id != client.user.id and payload.user_id != 885419823499214859:
-        await message.remove_reaction('👎', payload.member)
-    if str(payload.emoji) == '👍' and payload.user_id != client.user.id and payload.user_id != 885419823499214859:
-        await message.remove_reaction('👍', payload.member)
-    if str(payload.emoji) == '👏' and payload.user_id != client.user.id and payload.user_id != 885419823499214859:
-        await message.remove_reaction('👏', payload.member)
-    if str(payload.emoji) == '⭕' and payload.user_id != client.user.id and payload.user_id != 885419823499214859:
-        o_msg = await client.get_channel(892220976228618270).send(f'<@{payload.user_id}> 참가! ({o_dic[payload.message_id].main_msg.content[1:]})')
-        o_dic[payload.message_id].set_data(payload.user_id, o_msg)
-    if str(payload.emoji) == '👋' and payload.user_id != client.user.id and payload.user_id != 885419823499214859:
-        for i in range(1,3):
-            time.sleep(0.3)
-            await rabbit_msg.edit(content=f" /)/)\n('   ')ㅡ\n(     )")
-            time.sleep(0.3)
-            await rabbit_msg.edit(content=f" /)/)\n('   ')\\\n(     )")
-            time.sleep(0.3)
-            await rabbit_msg.edit(content=f" /)/)\n('   ')ㅡ\n(     )")
-            time.sleep(0.3)
-            await rabbit_msg.edit(content=f" /)/)\n('   ')/\n(     )")
-        await message.remove_reaction('👋', payload.member)
-    if str(payload.emoji) == '😆' and payload.user_id != client.user.id and payload.user_id != 885419823499214859:
-        await rabbit_msg.edit(content=f" /)/)\n(> <)/\n(     )")
-        time.sleep(2)
-        await rabbit_msg.edit(content=f"/)/)\n('   ')/\n(     )")
-        await message.remove_reaction('😆', payload.member)
-
-        
-@client.event
-async def on_raw_reaction_remove(payload): 
-    try:
-        if str(payload.emoji) == '⭕' and payload.user_id != client.user.id:
-            await o_dic[payload.message_id].msg_dic[payload.user_id].delete()
-    except KeyError as e:
-            pass   
         
 @client.event
 async def on_message(message):
@@ -386,6 +311,82 @@ async def on_message(message):
         await stone_dic[add_user].stone_msg.add_reaction('☝️')
         await stone_dic[add_user].stone_msg.add_reaction('✌️')
         await stone_dic[add_user].stone_msg.add_reaction('👎')     
+
+@client.event
+async def on_reaction_add(reaction, user):
+    if user.bot == 1:
+        global rf_pbb
+        global user_item_lv
+        global user_item
+        user_item_lv = 1
+        rf_pbb = 90
+        return None
+    
+#돌깎기 -----------------------------
+    if str(reaction.emoji) == "☝️" or str(reaction.emoji) == "✌️" or str(reaction.emoji) == "👎":
+        if str(reaction.emoji) == "☝️":
+            stone_dic[user.id].stone_start(stone_dic[user.id].각인1)
+        if str(reaction.emoji) == "✌️":
+            stone_dic[user.id].stone_start(stone_dic[user.id].각인2)
+        if str(reaction.emoji) == "👎":
+            stone_dic[user.id].stone_start(stone_dic[user.id].감소)
+           
+        if len(stone_dic[user.id].각인1) + len(stone_dic[user.id].각인2) + len(stone_dic[user.id].감소) == 30:
+            await stone_dic[user.id].stone_msg.edit(content=f"★돌 시뮬★ <@{add_user}>(이)가 깎는중!\n 각인1☝️  : {stone_dic[user.id].각인1} \n 각인2✌️ : {stone_dic[user.id].각인2} \n 감소 👎  : {stone_dic[user.id].감소} \n 확률 : {stone_dic[user.id].pbb_base}%")
+        if (len(stone_dic[user.id].각인1) + len(stone_dic[user.id].각인2) + len(stone_dic[user.id].감소)) == 30 and '◇' not in stone_dic[user.id].각인1 and '◇' not in stone_dic[user.id].각인2 and '◇' not in stone_dic[user.id].감소:
+            await stone_dic[user.id].stone_msg.edit(content=f"★돌 시뮬★ <@{add_user}>(이)가 깎음!\n 각인1☝️  : {stone_dic[user.id].각인1} \n 각인2✌️ : {stone_dic[user.id].각인2} \n 감소 👎  : {stone_dic[user.id].감소} \n 확률 : {stone_dic[user.id].pbb_base}% \n {stone_dic[user.id].각인1.count('🔷')} {stone_dic[user.id].각인2.count('🔷')} {stone_dic[user.id].감소.count('🔷')} 돌입니다.")
+            if stone_dic[user.id].각인1.count('🔷') + stone_dic[user.id].각인2.count('🔷') > 13:
+                if stone_dic[user.id].각인1.count('🔷') == 8 and stone_dic[user.id].각인2.count('🔷') == 6:
+                    pass
+                elif stone_dic[user.id].각인1.count('🔷') == 6 and stone_dic[user.id].각인2.count('🔷') == 8:
+                    pass
+                else:
+                    await client.get_channel(890618012883906590).send(f'<@{user.id}>님이 {stone_dic[user.id].각인1.count("🔷")} {stone_dic[user.id].각인2.count("🔷")} {stone_dic[user.id].감소.count("🔷")} 돌을 깎았습니다!')
+                    stone_dic[user.id] = ''
+        
+#사용자 이모지 자동 제거
+@client.event
+async def on_raw_reaction_add(payload):
+    channel = await client.fetch_channel(payload.channel_id)
+    message = await channel.fetch_message(payload.message_id)
+    if str(payload.emoji) == '☝️' and payload.user_id != client.user.id and payload.user_id != 885419823499214859:
+        await message.remove_reaction('☝️', payload.member)
+    if str(payload.emoji) == '✌️' and payload.user_id != client.user.id and payload.user_id != 885419823499214859:
+        await message.remove_reaction('✌️', payload.member)
+    if str(payload.emoji) == '👎' and payload.user_id != client.user.id and payload.user_id != 885419823499214859:
+        await message.remove_reaction('👎', payload.member)
+    if str(payload.emoji) == '👍' and payload.user_id != client.user.id and payload.user_id != 885419823499214859:
+        await message.remove_reaction('👍', payload.member)
+    if str(payload.emoji) == '👏' and payload.user_id != client.user.id and payload.user_id != 885419823499214859:
+        await message.remove_reaction('👏', payload.member)
+    if str(payload.emoji) == '⭕' and payload.user_id != client.user.id and payload.user_id != 885419823499214859:
+        o_msg = await client.get_channel(892220976228618270).send(f'<@{payload.user_id}> 참가! ({o_dic[payload.message_id].main_msg.content[1:]})')
+        o_dic[payload.message_id].set_data(payload.user_id, o_msg)
+    if str(payload.emoji) == '👋' and payload.user_id != client.user.id and payload.user_id != 885419823499214859:
+        for i in range(1,3):
+            time.sleep(0.3)
+            await rabbit_msg.edit(content=f" /)/)\n('   ')ㅡ\n(     )")
+            time.sleep(0.3)
+            await rabbit_msg.edit(content=f" /)/)\n('   ')\\\n(     )")
+            time.sleep(0.3)
+            await rabbit_msg.edit(content=f" /)/)\n('   ')ㅡ\n(     )")
+            time.sleep(0.3)
+            await rabbit_msg.edit(content=f" /)/)\n('   ')/\n(     )")
+        await message.remove_reaction('👋', payload.member)
+    if str(payload.emoji) == '😆' and payload.user_id != client.user.id and payload.user_id != 885419823499214859:
+        await rabbit_msg.edit(content=f" /)/)\n(> <)/\n(     )")
+        time.sleep(2)
+        await rabbit_msg.edit(content=f"/)/)\n('   ')/\n(     )")
+        await message.remove_reaction('😆', payload.member)
+
+        
+@client.event
+async def on_raw_reaction_remove(payload): 
+    try:
+        if str(payload.emoji) == '⭕' and payload.user_id != client.user.id:
+            await o_dic[payload.message_id].msg_dic[payload.user_id].delete()
+    except KeyError as e:
+            pass   
 
 access_token = os.environ['BOT_TOKEN']
 client.run(access_token)
