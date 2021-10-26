@@ -386,5 +386,5 @@ async def on_raw_reaction_remove(payload):
     except KeyError as e:
             pass 
 
-access_token = os.environ['BOT_TOKEN']
+access_token = os.environ['BOT_TOKEN1']
 client.run(access_token)
