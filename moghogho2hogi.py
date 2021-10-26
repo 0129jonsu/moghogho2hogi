@@ -309,8 +309,12 @@ async def on_message(message):
         stone_dic[add_user].set_stone_msg(msg)
         await stone_dic[add_user].stone_msg.add_reaction('☝️')
         await stone_dic[add_user].stone_msg.add_reaction('✌️')
-        await stone_dic[add_user].stone_msg.add_reaction('👎')     
-
+        await stone_dic[add_user].stone_msg.add_reaction('👎')
+        
+        
+        
+        pass
+pass
 @client.event
 async def on_reaction_add(reaction, user):
     if user.bot == 1:
