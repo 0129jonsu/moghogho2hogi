@@ -291,6 +291,23 @@ async def on_message(message):
         else:
             pass
         
+    if message.content.startswith('돌깎자!'):
+        global add_user
+        add_user = message.author.id
+        pbb_base = 75
+        pof = ''
+        각인1 = ['◇','◇','◇','◇','◇','◇','◇','◇','◇','◇']
+        각인2 = ['◇','◇','◇','◇','◇','◇','◇','◇','◇','◇']
+        감소 = ['◇','◇','◇','◇','◇','◇','◇','◇','◇','◇']
+
+        msg = await message.channel.send(f'★돌 시뮬★ <@{add_user}>(이)가 깎는중!\n각인1☝️  : {각인1} \n 각인2✌️ : {각인2} \n 감소 👎  : {감소} \n 확률 : 75%')
+        
+        stone_dic[add_user] = stone_data()
+        stone_dic[add_user].set_stone_msg(msg)
+        await stone_dic[add_user].stone_msg.add_reaction('☝️')
+        await stone_dic[add_user].stone_msg.add_reaction('✌️')
+        await stone_dic[add_user].stone_msg.add_reaction('👎')
+        
 @client.event
 async def on_reaction_add(reaction, user):
     if user.bot == 1:
@@ -365,6 +382,6 @@ async def on_raw_reaction_remove(payload):
             await o_dic[payload.message_id].msg_dic[payload.user_id].delete()
     except KeyError as e:
             pass 
-
+        
 access_token = os.environ['BOT_TOKEN']
 client.run(access_token)
