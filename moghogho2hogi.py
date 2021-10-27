@@ -295,7 +295,7 @@ async def on_message(message):
         global add_user
         add_user = message.author.id
         pbb_base = 75
-        pof=''
+        pof = ''
         msg = await message.channel.send(f'★돌 시뮬★ <@{add_user}>(이)가 깎는중!\n각인1☝️  : {각인1} \n 각인2✌️ : {각인2} \n 감소 👎  : {감소} \n 확률 : 75%')
         각인1 = ['◇','◇','◇','◇','◇','◇','◇','◇','◇','◇']
         각인2 = ['◇','◇','◇','◇','◇','◇','◇','◇','◇','◇']
