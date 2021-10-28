@@ -344,6 +344,7 @@ async def on_reaction_add(reaction, user):
                     await client.get_channel(890618012883906590).send(f'<@{user.id}>님이 {stone_dic[user.id].각인1.count("🔷")} {stone_dic[user.id].각인2.count("🔷")} {stone_dic[user.id].감소.count("🔷")} 돌을 깎았습니다!')
                     stone_dic[user.id] = ''
             tmp_st = stone_dic[user.id]
+            time.sleep(3)
             await stone_dic[user.id].stone_msg.delete()
             await client.get_channel(903196295869636658).send(f"★돌 시뮬★ <@{add_user}>(이)가 깎음!\n 각인1☝️  : {tmp_st.각인1} \n 각인2✌️ : {tmp_st.각인2} \n 감소 👎  : {tmp_st.감소} \n 확률 : {tmp_st.pbb_base}% \n {tmp_st.각인1.count('🔷')} {tmp_st.각인2.count('🔷')} {tmp_st.감소.count('🔷')} 돌입니다.")
         
