@@ -326,15 +326,15 @@ async def on_reaction_add(reaction, user):
     if str(reaction.emoji) == "☝️" or str(reaction.emoji) == "✌️" or str(reaction.emoji) == "👎":
         if str(reaction.emoji) == "☝️":
             stone_dic[user.id].stone_start(stone_dic[user.id].각인1)
-        if str(reaction.emoji) == "✌️":
+        elif str(reaction.emoji) == "✌️":
             stone_dic[user.id].stone_start(stone_dic[user.id].각인2)
-        if str(reaction.emoji) == "👎":
+        elif str(reaction.emoji) == "👎":
             stone_dic[user.id].stone_start(stone_dic[user.id].감소)
            
         if len(stone_dic[user.id].각인1) + len(stone_dic[user.id].각인2) + len(stone_dic[user.id].감소) == 30:
             await stone_dic[user.id].stone_msg.edit(content=f"★돌 시뮬★ <@{add_user}>(이)가 깎는중!\n 각인1☝️  : {stone_dic[user.id].각인1} \n 각인2✌️ : {stone_dic[user.id].각인2} \n 감소 👎  : {stone_dic[user.id].감소} \n 확률 : {stone_dic[user.id].pbb_base}%")
         if (len(stone_dic[user.id].각인1) + len(stone_dic[user.id].각인2) + len(stone_dic[user.id].감소)) == 30 and '◇' not in stone_dic[user.id].각인1 and '◇' not in stone_dic[user.id].각인2 and '◇' not in stone_dic[user.id].감소:
-            await stone_dic[user.id].stone_msg.edit(content=f"★돌 시뮬★ <@{add_user}>(이)가 깎음!\n 각인1☝️  : {stone_dic[user.id].각인1} \n 각인2✌️ : {stone_dic[user.id].각인2} \n 감소 👎  : {stone_dic[user.id].감소} \n 확률 : {stone_dic[user.id].pbb_base}% \n {stone_dic[user.id].각인1.count('🔷')} {stone_dic[user.id].각인2.count('🔷')} {stone_dic[user.id].감소.count('🔷')} 돌입니다.")
+            await stone_dic[user.id].stone_msg.edit(content=f"★돌 시뮬★ <@{add_user}>(이)가 깎음!\n 각인1☝️  : {stone_dic[user.id].각인1} \n 각인2✌️ : {stone_dic[user.id].각인2} \n 감소 👎  : {stone_dic[user.id].감소} \n 확률 : {stone_dic[user.id].pbb_base}% \n {stone_dic[user.id].각인1.count('🔷')} {stone_dic[user.id].각인2.count('🔷')} {stone_dic[user.id].감소.count('🔷')} 돌입니다.\n3초 후 돌깍자log 채널로 메시지를 옮깁니다.")
             if stone_dic[user.id].각인1.count('🔷') + stone_dic[user.id].각인2.count('🔷') > 13:
                 if stone_dic[user.id].각인1.count('🔷') == 8 and stone_dic[user.id].각인2.count('🔷') == 6:
                     pass
@@ -343,6 +343,10 @@ async def on_reaction_add(reaction, user):
                 else:
                     await client.get_channel(890618012883906590).send(f'<@{user.id}>님이 {stone_dic[user.id].각인1.count("🔷")} {stone_dic[user.id].각인2.count("🔷")} {stone_dic[user.id].감소.count("🔷")} 돌을 깎았습니다!')
                     stone_dic[user.id] = ''
+            tmp_st = stone_dic[user.id]
+            await stone_dic[user.id].stone_msg.delete()
+            await client.get_channel(903196295869636658).send(f"★돌 시뮬★ <@{add_user}>(이)가 깎음!\n 각인1☝️  : {tmp_st.각인1} \n 각인2✌️ : {tmp_st.각인2} \n 감소 👎  : {tmp_st.감소} \n 확률 : {tmp_st.pbb_base}% \n {tmp_st.각인1.count('🔷')} {tmp_st.각인2.count('🔷')} {tmp_st.감소.count('🔷')} 돌입니다.")
+        
         
 #사용자 이모지 자동 제거
 @client.event
