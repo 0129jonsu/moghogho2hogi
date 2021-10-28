@@ -255,6 +255,10 @@ async def on_message(message):
 #'오늘도' 응답     
     if message.content.startswith('오늘도'):
         await message.channel.send('파이팅!')
+        
+#'행복하세요?' 응답
+    if message.content.startswith('행복하세요?'):
+        await message.channel.send('행복하세요~')
 #'니얼굴' 응답
     if message.content.startswith('니얼굴'):
          if message.author.id == 279906131017465857:
