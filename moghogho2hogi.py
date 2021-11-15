@@ -80,6 +80,28 @@ async def on_message(message):
         return
     if message.content.startswith('오마이가쉬'):
         await message.channel.send(f'돈츄노암어세비지?')
+        
+    if message.content.startswith('사사게! '):
+        ssg_msg = ''
+        keyword_ori = message.content[5:]
+        keyword = urllib.parse.quote(keyword_ori)
+        url = f'https://www.inven.co.kr/board/lostark/5355?query=list&p=1&sterm=&name=subject&keyword={keyword}'
+        response = requests.get(url)
+        html = response.text
+        soup = bs4.BeautifulSoup(html, 'html.parser')
+        ssg = soup.body.find('div',{'class':'board-list'}).get_text()
+        p_ssg = re.compile(f'.*{keyword_ori}.*')
+        real_ssg = p_ssg.findall(ssg)
+        real_ssg = ''.join(real_ssg)
+        real_ssg = real_ssg.replace('                                                                                             ', '\n')
+        real_ssg = real_ssg.replace('                                               ','')
+        if real_ssg != '':
+            ssg_msg = ssg_msg + real_ssg + '\n'
+
+        if ssg_msg != '':
+            await message.channel.send(f'{real_ssg}')
+        else:
+            await message.channel.send(f'검색결과가 없습니다.')
     
     if message.content.startswith('검색! '):
         nickname_ori = message.content[4:]
