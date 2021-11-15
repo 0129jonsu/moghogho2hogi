@@ -82,7 +82,7 @@ async def on_message(message):
         await message.channel.send(f'돈츄노암어세비지?')
     
     if message.content.startswith('나는'):
-        if message.content.startswith('~'):
+        if message.content.endswith('~'):
             name = message.content[2:]
             await message.channel.send(f'너도{name}')
         
