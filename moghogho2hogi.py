@@ -78,7 +78,7 @@ class party:
 async def on_message(message):
     if message.author == client.user:
         return
-    if messaage.content.startswith('오마이가쉬'):
+    if message.content.startswith('오마이가쉬'):
         await message.channel.send(f'돈츄노암어세비지?')
     
     if message.content.startswith('검색! '):
