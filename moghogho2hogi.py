@@ -80,6 +80,11 @@ async def on_message(message):
         return
     if message.content.startswith('오마이가쉬'):
         await message.channel.send(f'돈츄노암어세비지?')
+    
+    if message.content.startswith('나는'):
+        if message.content.startswith('~'):
+            name = message.content[2:]
+            await message.channel.send(f'너도{name}')
         
     if message.content.startswith('사사게! '):
         ssg_msg = ''
