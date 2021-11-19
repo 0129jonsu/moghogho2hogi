@@ -90,7 +90,7 @@ async def on_message(message):
         ssg_msg = ''
         keyword_ori = message.content[5:]
         keyword = urllib.parse.quote(keyword_ori)
-        url = f'https://www.inven.co.kr/board/lostark/5355?query=list&p=1&sterm=&name=subject&keyword={keyword}'
+        url = f'https://www.inven.co.kr/board/lostark/5355?query=list&p=1&sterm=&name=subjcont&keyword={keyword}'
         response = requests.get(url)
         html = response.text
         soup = bs4.BeautifulSoup(html, 'html.parser')
