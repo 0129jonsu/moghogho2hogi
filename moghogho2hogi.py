@@ -253,7 +253,7 @@ async def on_message(message):
             embed = discord.Embed(title=f"{raid_name}", color=0x62c1cc)
             embed.add_field(name = "파티1", value = f'{raid_dic[raid_name].party_1}', inline = False)
             embed.add_field(name = "파티2", value = f'{raid_dic[raid_name].party_2}', inline = False)
-            embed.add_field(name = "lv평균", value = f'{raid_dic[raid_name].lv_avg:.2f, inline = False}
+            embed.add_field(name = "lv평균", value = f'{raid_dic[raid_name].lv_avg:.2f}, inline = False}
             await message.channel.send(embed=embed)
         await ms.delete()
         
