@@ -132,11 +132,9 @@ class raid:
         while(x <= self.c_count):
             if x % 2 == 0:
                 tmp_char = f'\n{name_dic_tmp[lv_list[y]]} ({lv_list[y]}) {class_dic_tmp[lv_list[y]]}'
-                print(f'{tmp_char} 넣음!')
                 self.party_1+=tmp_char
             else:
                 tmp_char = f'\n{name_dic_tmp[lv_list[y]]} ({lv_list[y]}) {class_dic_tmp[lv_list[y]]}'
-                print(f'{tmp_char} 넣음!')
                 self.party_2+=tmp_char
 
             x += 1
