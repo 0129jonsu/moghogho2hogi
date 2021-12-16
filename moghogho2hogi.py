@@ -245,13 +245,16 @@ async def on_message(message):
             raid_name = raid_tmp[1]
             raid_dic[raid_name] = raid(raid_tmp, raid_name, class_count)
             raid_dic[raid_name].cal_avg()
-            await message.channel.send(f'공대명 : {raid_name} 렙 평균 : {raid_dic[raid_name].lv_avg}')
         else:
             await message.channel.send(f'※check command※')
         if raid_dic[raid_name].set_party() == 0:
             await message.channel.send(f'명령어를 확인해주세요')
         else:
-            await message.channel.send(f'파티1 : {raid_dic[raid_name].party_1} \n파티2 : {raid_dic[raid_name].party_2}')
+            embed = discord.Embed(title=f"{raid_name}", color=0x62c1cc)
+            embed.add_field(name = "파티1", value = f'{raid_dic[raid_name].party_1}', inline = False)
+            embed.add_field(name = "파티2", value = f'{raid_dic[raid_name].party_2}', inline = False)
+            embed.add_field(name = "lv평균", value = f'{raid_dic[raid_name].lv_avg:.2f, inline = False}
+            await message.channel.send(embed=embed)
         await ms.delete()
         
     if message.content.startswith('사사게! '):
