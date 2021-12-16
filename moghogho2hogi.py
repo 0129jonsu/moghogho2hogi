@@ -235,7 +235,8 @@ async def on_message(message):
         if message.content.endswith('~'):
             name = message.content[2:]
             await message.channel.send(f'너도{name}')
-    
+  
+    #공대생성 
     if message.content.startswith('!공대생성'): #!공대생성 공대이름 캐1 캐2 캐3 //// 4
         ms = await message.channel.send(f'잠시만여 ㅇㅅㅇ')
         class_count = message.content.count(' ')
