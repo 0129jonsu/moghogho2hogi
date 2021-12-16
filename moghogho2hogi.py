@@ -18,6 +18,156 @@ stone_dic = {}
 global o_dic
 o_dic = {}
 
+#레이드 dic
+global raid_dic
+raid_dic = {}
+
+#raid class
+class raid:
+    def __init__(self, rl, rn, cc):
+        self.r_list = rl
+        self.r_name = rn
+        self.c_count = cc
+        self.lv_avg = 0
+        
+    def set_raid(self, rl, rn ,cc):
+        self.r_list = rl
+        self.r_name = rn
+        self.c_count = cc
+
+    def check_a(self, n):
+        tmp_server_msg = '' #메시지
+        nickname_ori = n
+        nickname = urllib.parse.quote(nickname_ori)
+        
+        url = f'https://lostark.game.onstove.com/Profile/Character/{nickname}'
+        response = requests.get(url)
+        html = response.text
+        soup = bs4.BeautifulSoup(html, 'html.parser')
+        #전투정보실 체크
+        check = soup.find('div',{'class':'info'})
+        if check != None:
+            tmp_server_msg = f'로스트아크 전투정보실 점검 중 입니다.'
+            return False
+        else:
+            user_search = soup.body.find('div', {"class":"profile-attention"})
+            if user_search != None:
+                tmp_server_msg = (f'({nickname_ori})캐릭터 정보가 없습니다. 캐릭터명을 확인해주세요.')
+                return False
+        return True 
+                
+            
+    def set_party(self):
+        self.party_1 = ''
+        self.party_2 = ''
+        x=2
+        #서폿 분배
+        while(x <= self.c_count):
+            nickname_ori = self.r_list[x]
+            nickname = urllib.parse.quote(nickname_ori)
+
+            url = f'https://lostark.game.onstove.com/Profile/Character/{nickname}'
+        
+            response = requests.get(url)
+            html = response.text
+            soup = bs4.BeautifulSoup(html, 'html.parser')
+            #아이템레벨
+            if self.check_a(self.r_list[x]) == 1:
+                pass
+            else:
+                return 0
+            item_lv = soup.find('div',{"class":"level-info2__item"}).get_text()
+            item_lv = item_lv[12:]
+            #클래스
+            user_class = soup.select_one('#lostark-wrapper > div > main > div > div.profile-character-info > img')['alt']
+            if(user_class == '바드' or user_class == '홀리나이트'):
+                tmp_char = f'\n{nickname_ori} ({item_lv}) {user_class}'
+                if self.party_1 == '':
+                    self.party_1 += tmp_char
+                    del self.r_list[x]
+                    self.c_count -= 1
+                    x -= 1
+                else:
+                    self.party_2 += tmp_char
+                    del self.r_list[x]
+                    self.c_count -= 1
+                    x -= 1
+
+            x += 1
+        tmp_count = self.c_count
+        #딜러분배
+        name_dic_tmp = {}
+        class_dic_tmp = {}
+        lv_list = []
+        x=2
+        
+        while(x <= self.c_count):
+            nickname_ori = self.r_list[x]
+            nickname = urllib.parse.quote(nickname_ori)
+
+            url = f'https://lostark.game.onstove.com/Profile/Character/{nickname}'
+        
+            response = requests.get(url)
+            html = response.text
+            soup = bs4.BeautifulSoup(html, 'html.parser')
+            if self.check_a(self.r_list[x]) == 1:
+                pass
+            else:
+                return 0
+            #아이템레벨
+            item_lv = soup.find('div',{"class":"level-info2__item"}).get_text()
+            item_lv = item_lv[12:]
+            item_lv = float(item_lv.replace(',','')) #,제거 후 float
+            #클래스
+            user_class = soup.select_one('#lostark-wrapper > div > main > div > div.profile-character-info > img')['alt']
+            name_dic_tmp[item_lv] = nickname_ori
+            class_dic_tmp[item_lv] = user_class
+            lv_list.append(item_lv)
+            x += 1
+        lv_list.sort()
+        
+        x=2
+        y=0
+        self.c_count = tmp_count 
+        while(x <= self.c_count):
+            if x % 2 == 0:
+                tmp_char = f'\n{name_dic_tmp[lv_list[y]]} ({lv_list[y]}) {class_dic_tmp[lv_list[y]]}'
+                print(f'{tmp_char} 넣음!')
+                self.party_1+=tmp_char
+            else:
+                tmp_char = f'\n{name_dic_tmp[lv_list[y]]} ({lv_list[y]}) {class_dic_tmp[lv_list[y]]}'
+                print(f'{tmp_char} 넣음!')
+                self.party_2+=tmp_char
+
+            x += 1
+            y += 1
+        
+        
+
+    def cal_avg(self):
+        a=2
+        while a <= self.c_count:
+            nickname_ori = self.r_list[a]
+            nickname = urllib.parse.quote(nickname_ori)
+
+            url = f'https://lostark.game.onstove.com/Profile/Character/{nickname}'
+        
+            response = requests.get(url)
+            html = response.text
+            soup = bs4.BeautifulSoup(html, 'html.parser')
+            if self.check_a(self.r_list[a]) == 1:
+                pass
+            else:
+                return 0
+
+            #아아템 레벨 float으로 가져옴
+            item_lv = soup.find('div',{"class":"level-info2__item"}).get_text()
+            item_lv = item_lv[12:]
+            item_lv = float(item_lv.replace(',','')) #,제거 후 float
+            self.lv_avg += item_lv
+            a += 1
+        self.lv_avg = self.lv_avg / (self.c_count - 1)
+
 #음식
 global food
 food = ['치킨','피자','중식','초밥','떡볶이','햄버거','족발보쌈','갈비탕','돈까스','회','찜닭','삼겹살','편의점','컵라면','굶어','국밥','냉면','파스타','마라탕']
@@ -85,6 +235,23 @@ async def on_message(message):
         if message.content.endswith('~'):
             name = message.content[2:]
             await message.channel.send(f'너도{name}')
+    
+    if message.content.startswith('!공대생성'): #!공대생성 공대이름 캐1 캐2 캐3 //// 4
+        ms = await message.channel.send(f'잠시만여 ㅇㅅㅇ')
+        class_count = message.content.count(' ')
+        raid_tmp = message.content.split(' ')
+        if(raid_tmp[0] == '!공대생성'): #명령어 확인
+            raid_name = raid_tmp[1]
+            raid_dic[raid_name] = raid(raid_tmp, raid_name, class_count)
+            raid_dic[raid_name].cal_avg()
+            await message.channel.send(f'공대명 : {raid_name} 렙 평균 : {raid_dic[raid_name].lv_avg}')
+        else:
+            await message.channel.send(f'※check command※')
+        if raid_dic[raid_name].set_party() == 0:
+            await message.channel.send(f'명령어를 확인해주세요')
+        else:
+            await message.channel.send(f'파티1 : {raid_dic[raid_name].party_1} \n파티2 : {raid_dic[raid_name].party_2}')
+        await ms.delete()
         
     if message.content.startswith('사사게! '):
         ssg_msg = ''
