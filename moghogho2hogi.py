@@ -226,6 +226,26 @@ class party:
 async def on_message(message):
     if message.author == client.user:
         return
+    
+    if message.content.startswith('버스! '):
+        bus_msg = message.content.split()
+        
+        bus_mc = int(bus_msg[1])
+        bus_ds = int(bus_msg[2])
+        bus_gm = [0,0,0,0,0,0]
+        bus_res = bus_ds - bus_mc
+        
+        for i in range(len(bus_msg)-3):
+            bus_gm[i] = int(bus_msg[3+i])
+        
+        for j in range(len(bus_msg)-3):
+            bus_res += bus_gm[j]
+        
+        bus_res = bus_res * 0.95 / 4
+        
+        await message.channel.send(f'1인당 : {bus_res}')
+        
+    
     if message.content.startswith('오마이가쉬'):
         await message.channel.send(f'돈츄노암어세비지?')
     
