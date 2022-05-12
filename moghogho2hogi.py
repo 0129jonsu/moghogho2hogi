@@ -227,6 +227,18 @@ async def on_message(message):
     if message.author == client.user:
         return
     
+    if message.content.startswith('경매! '):
+        auction = int(message.content[4:])
+        auction_4_1 = int((auction*0.95) - (auction*0.95/4))
+        auction_4_2 = int(((auction*0.95) - (auction*0.95/4))/ 1.1)
+        auction_8_1 = int((auction*0.95) - (auction*0.95/8))
+        auction_8_2 = int(((auction*0.95) - (auction*0.95/8)) / 1.1)
+        
+        embed = discord.Embed(title=f"경매 입찰가 <{auction}G>", color=0x62c1cc)
+        embed.add_field(name = "4인", value = f"손익분기점 : {auction_4_1} \n 개이득가 : {auction_4_2}", inline=True)
+        embed.add_field(name = "8인", value = f"손익분기점 : {auction_8_1} \n 개이득가 : {auction_8_2}", inline=True)
+        await message.channel.send(embed=embed)
+    
     if message.content.startswith('버스! '):
         bus_msg = message.content.split()
         
