@@ -170,6 +170,9 @@ class raid:
 global food
 food = ['치킨','피자','중식','초밥','떡볶이','햄버거','족발보쌈','갈비탕','돈까스','회','찜닭','삼겹살','편의점','컵라면','굶어','국밥','냉면','파스타','마라탕']
 
+global lw
+lw = ['칼퇴','야근','조퇴','4시','5시','6시','7시','8시','9시','10시']
+
 #실행 확인
 @client.event
 async def on_ready():
@@ -227,6 +230,8 @@ async def on_message(message):
     if message.author == client.user:
         return
     
+    if message.content.startswith('언퉤'):
+        await message.channel.send(f"2hogi's pick : ★{random.choice(lw)}★")   
     
     if message.content.startswith('경매! '):
         auction = int(message.content[4:])
