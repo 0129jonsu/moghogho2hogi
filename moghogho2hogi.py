@@ -227,6 +227,7 @@ async def on_message(message):
     if message.author == client.user:
         return
     
+    
     if message.content.startswith('경매! '):
         auction = int(message.content[4:])
         auction_4_1 = int((auction*0.95) - (auction*0.95/4))
@@ -513,15 +514,11 @@ async def on_message(message):
         else:
             await message.channel.send('호'*a)
             
-#'ㅋㅋㅋㅋ' 응답
     if message.content.startswith('ㅋ') or message.content.endswith('ㅋ'):
         p_zz = re.compile('ㅋㅋㅋㅋ')
         m_zz = p_zz.search(message.content)
-        if m_zz != None:
-            if message.author.id == 279906131017465857:
-                await message.channel.send(f'<@{message.author.id}>쪼개?')
-            else:
-                await message.channel.send('ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ')
+        if m_zz != None and random.randint(0,9) == 1:
+            await message.channel.send('ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ')
         else:
             pass
         
