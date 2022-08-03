@@ -168,6 +168,7 @@ class raid:
 
 #음식
 global food
+<<<<<<< HEAD
 food = ['치킨','피자','중식','초밥',
         '떡볶이','햄버거','족발보쌈',
         '갈비탕','돈까스','회','찜닭',
@@ -177,6 +178,9 @@ food = ['치킨','피자','중식','초밥',
 
 global lw
 lw = ['칼퇴','야근','조퇴','4시','5시','6시','7시','8시','9시','10시']
+=======
+food = ['치킨','피자','중식','초밥','떡볶이','햄버거','족발보쌈','갈비탕','돈까스','회','찜닭','삼겹살','편의점','컵라면','굶어','국밥','냉면','파스타','마라탕']
+>>>>>>> 9e2237b (aa)
 
 #실행 확인
 @client.event
@@ -235,6 +239,7 @@ async def on_message(message):
     if message.author == client.user:
         return
     
+<<<<<<< HEAD
     if message.content.startswith('언퉤'):
         await message.channel.send(f"2hogi's pick : ★{random.choice(lw)}★")   
     
@@ -250,12 +255,18 @@ async def on_message(message):
         embed.add_field(name = "8인", value = f"손익분기점 : {auction_8_1} \n 개이득가 : {auction_8_2}", inline=True)
         await message.channel.send(embed=embed)
     
+=======
+>>>>>>> 9e2237b (aa)
     if message.content.startswith('버스! '):
         bus_msg = message.content.split()
         
         bus_mc = int(bus_msg[1])
         bus_ds = int(bus_msg[2])
         bus_gm = [0,0,0,0,0,0]
+<<<<<<< HEAD
+=======
+        bus_gm_sum = 0
+>>>>>>> 9e2237b (aa)
         bus_res = bus_ds - bus_mc
         
         for i in range(len(bus_msg)-3):
@@ -263,10 +274,23 @@ async def on_message(message):
         
         for j in range(len(bus_msg)-3):
             bus_res += bus_gm[j]
+<<<<<<< HEAD
         
         bus_res = bus_res * 0.95 / 4
         
         await message.channel.send(f'1인당 : {bus_res}')
+=======
+            bus_gm_sum += bus_gm[j]
+        
+        bus_res = bus_res * 0.95 / 4
+
+        embed = discord.Embed(title=f"버스 분배(4인 기준)", color=0x62c1cc)
+        embed.add_field(name = "미참", value = f'{bus_mc}', inline =True)
+        embed.add_field(name = "독식", value = f'{bus_ds}', inline = True)
+        embed.add_field(name = "경매합", value = f'{bus_gm_sum}', inline = True)
+        embed.add_field(name = "1인당", value = f'{bus_res}', inline = False)
+        await message.channel.send(embed=embed)
+>>>>>>> 9e2237b (aa)
         
     
     if message.content.startswith('오마이가쉬'):
@@ -524,11 +548,23 @@ async def on_message(message):
         else:
             await message.channel.send('호'*a)
             
+<<<<<<< HEAD
     if message.content.startswith('ㅋ') or message.content.endswith('ㅋ'):
         p_zz = re.compile('ㅋㅋㅋㅋ')
         m_zz = p_zz.search(message.content)
         if m_zz != None and random.randint(0,9) == 1:
             await message.channel.send('ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ')
+=======
+#'ㅋㅋㅋㅋ' 응답
+    if message.content.startswith('ㅋ') or message.content.endswith('ㅋ'):
+        p_zz = re.compile('ㅋㅋㅋㅋ')
+        m_zz = p_zz.search(message.content)
+        if m_zz != None:
+            if message.author.id == 279906131017465857:
+                await message.channel.send(f'<@{message.author.id}>쪼개?')
+            else:
+                await message.channel.send('ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ')
+>>>>>>> 9e2237b (aa)
         else:
             pass
         
