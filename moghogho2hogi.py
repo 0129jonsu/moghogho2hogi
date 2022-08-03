@@ -1,10 +1,15 @@
-import discord, asyncio, random, re, time, os, bs4, urllib, requests, re
+from dis import disco
+import discord, asyncio, random, re, time, os, bs4, urllib, requests, re, pymysql
 from discord import message
 from discord import channel
 from discord.ext import commands
 from discord.ext.commands import Bot
+from discord.ext import tasks
+from datetime import datetime
 
-client = discord.Client()
+intents = discord.Intents.default()
+client = discord.Client(intents=intents)
+passwd_token= os.environ['PASSWD_TOKEN']
 
 global tmp_msg
 global tmp_index
@@ -13,10 +18,6 @@ tmp_index = -1
 
 o_msg_dic = {}
 stone_dic = {}
-
-#⭕ 변수
-global o_dic
-o_dic = {}
 
 #레이드 dic
 global raid_dic
@@ -55,139 +56,18 @@ class raid:
                 tmp_server_msg = (f'({nickname_ori})캐릭터 정보가 없습니다. 캐릭터명을 확인해주세요.')
                 return False
         return True 
-                
-            
-    def set_party(self):
-        self.party_1 = ''
-        self.party_2 = ''
-        x=2
-        #서폿 분배
-        while(x <= self.c_count):
-            nickname_ori = self.r_list[x]
-            nickname = urllib.parse.quote(nickname_ori)
-
-            url = f'https://lostark.game.onstove.com/Profile/Character/{nickname}'
-        
-            response = requests.get(url)
-            html = response.text
-            soup = bs4.BeautifulSoup(html, 'html.parser')
-            #아이템레벨
-            if self.check_a(self.r_list[x]) == 1:
-                pass
-            else:
-                return 0
-            item_lv = soup.find('div',{"class":"level-info2__item"}).get_text()
-            item_lv = item_lv[12:]
-            #클래스
-            user_class = soup.select_one('#lostark-wrapper > div > main > div > div.profile-character-info > img')['alt']
-            if(user_class == '바드' or user_class == '홀리나이트'):
-                tmp_char = f'\n{nickname_ori} ({item_lv}) {user_class}'
-                if self.party_1 == '':
-                    self.party_1 += tmp_char
-                    del self.r_list[x]
-                    self.c_count -= 1
-                    x -= 1
-                else:
-                    self.party_2 += tmp_char
-                    del self.r_list[x]
-                    self.c_count -= 1
-                    x -= 1
-
-            x += 1
-        tmp_count = self.c_count
-        #딜러분배
-        name_dic_tmp = {}
-        class_dic_tmp = {}
-        lv_list = []
-        x=2
-        
-        while(x <= self.c_count):
-            nickname_ori = self.r_list[x]
-            nickname = urllib.parse.quote(nickname_ori)
-
-            url = f'https://lostark.game.onstove.com/Profile/Character/{nickname}'
-        
-            response = requests.get(url)
-            html = response.text
-            soup = bs4.BeautifulSoup(html, 'html.parser')
-            if self.check_a(self.r_list[x]) == 1:
-                pass
-            else:
-                return 0
-            #아이템레벨
-            item_lv = soup.find('div',{"class":"level-info2__item"}).get_text()
-            item_lv = item_lv[12:]
-            item_lv = float(item_lv.replace(',','')) #,제거 후 float
-            #클래스
-            user_class = soup.select_one('#lostark-wrapper > div > main > div > div.profile-character-info > img')['alt']
-            name_dic_tmp[item_lv] = nickname_ori
-            class_dic_tmp[item_lv] = user_class
-            lv_list.append(item_lv)
-            x += 1
-        lv_list.sort()
-        
-        x=2
-        y=0
-        self.c_count = tmp_count 
-        while(x <= self.c_count):
-            if x % 2 == 0:
-                tmp_char = f'\n{name_dic_tmp[lv_list[y]]} ({lv_list[y]}) {class_dic_tmp[lv_list[y]]}'
-                self.party_1+=tmp_char
-            else:
-                tmp_char = f'\n{name_dic_tmp[lv_list[y]]} ({lv_list[y]}) {class_dic_tmp[lv_list[y]]}'
-                self.party_2+=tmp_char
-
-            x += 1
-            y += 1
-        
-        
-
-    def cal_avg(self):
-        a=2
-        while a <= self.c_count:
-            nickname_ori = self.r_list[a]
-            nickname = urllib.parse.quote(nickname_ori)
-
-            url = f'https://lostark.game.onstove.com/Profile/Character/{nickname}'
-        
-            response = requests.get(url)
-            html = response.text
-            soup = bs4.BeautifulSoup(html, 'html.parser')
-            if self.check_a(self.r_list[a]) == 1:
-                pass
-            else:
-                return 0
-
-            #아아템 레벨 float으로 가져옴
-            item_lv = soup.find('div',{"class":"level-info2__item"}).get_text()
-            item_lv = item_lv[12:]
-            item_lv = float(item_lv.replace(',','')) #,제거 후 float
-            self.lv_avg += item_lv
-            a += 1
-        self.lv_avg = self.lv_avg / (self.c_count - 1)
 
 #음식
 global food
-<<<<<<< HEAD
-food = ['치킨','피자','중식','초밥',
-        '떡볶이','햄버거','족발보쌈',
-        '갈비탕','돈까스','회','찜닭',
-        '삼겹살','편의점','컵라면','굶어',
-        '국밥','냉면','파스타','마라탕',
-        '김밥','칼국수','잔치국수','쌀먹']
-
-global lw
-lw = ['칼퇴','야근','조퇴','4시','5시','6시','7시','8시','9시','10시']
-=======
 food = ['치킨','피자','중식','초밥','떡볶이','햄버거','족발보쌈','갈비탕','돈까스','회','찜닭','삼겹살','편의점','컵라면','굶어','국밥','냉면','파스타','마라탕']
->>>>>>> 9e2237b (aa)
 
 #실행 확인
 @client.event
 async def on_ready():
     print('We have logged in as {0.user}'.format(client))
     await client.change_presence(activity=discord.Game(name="명령어!"))
-
+    stock_loop.start()
+    
 class stone_data:
     def __init__(self):
         self.각인1 = ['◇','◇','◇','◇','◇','◇','◇','◇','◇','◇']
@@ -233,95 +113,689 @@ class party:
         
     def set_data(self, uid, om):
         self.msg_dic[uid] = om 
+
+@tasks.loop(minutes=30)
+async def stock_loop():
+    if datetime.now().hour == 23 and datetime.now().minute >= 30:
+        conn_lt_init = pymysql.connect(
+        user = 'jonsu0129',
+        password = passwd_token,
+        host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+        db = 'testDB',
+        charset = 'utf8'
+        )
+        cur_lt_init = conn_lt_init.cursor()
+        sql_lt_init = "update userTable set ltcount = 3"
+            
+        cur_lt_init.execute(sql_lt_init)
+        conn_lt_init.commit()
+        conn_lt_init.close()
+        await client.get_channel(792887565589282827).send(f'복권이 3개로 초기화됐습니다.')
+
+@tasks.loop(seconds=60)
+async def stock_loop():
+    if datetime.now().minute == 30 or datetime.now().minute == 0:
+        gypkr_rand = random.triangular(-30,30,0.2)
+        gypkr_rand = random.triangular(gypkr_rand,-gypkr_rand,0.2)
+
+        dbbio_rand = random.triangular(-50,100,0.2)
+        dbbio_rand = random.triangular(dbbio_rand,-dbbio_rand,0.2)
+        
+        global last_gypkr_rand
+        global last_dbbio_rand
+        
+        last_gypkr_rand = gypkr_rand
+        last_dbbio_rand = dbbio_rand
+
+        conn_stock = pymysql.connect(
+            user = 'jonsu0129',
+            password = passwd_token,
+            host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+            db = 'testDB',
+            charset = 'utf8'
+        )
+
+        cur_gypkr_now = conn_stock.cursor()
+        cur_gypkr_update = conn_stock.cursor()
+        cur_dbbio_now = conn_stock.cursor()
+        cur_dbbio_update = conn_stock.cursor()
+
+        sql_stock_price = "SELECT * FROM testDB.discordStock WHERE stockName = %(stockName)s"
+        sql_stock_update = "UPDATE testDB.discordStock SET stockPrice = %s WHERE stockName = %s"
+
+        gypkr_price = cur_gypkr_now.execute(sql_stock_price, {"stockName" : {'(주)개양파코리아'}})
+        dbbio_price = cur_dbbio_now.execute(sql_stock_price, {"stockName" : {'(주)단밤바이오'}})
+        gypkr_price = cur_gypkr_now.fetchall()[0][1]
+        dbbio_price = cur_dbbio_now.fetchall()[0][1]
+
+        print(f'gypkr_price : {gypkr_price}, dbbio_price : {dbbio_price}')
+        gypkr_price += round(gypkr_price * gypkr_rand / 100)
+        dbbio_price += round(dbbio_price * dbbio_rand / 100)
+
+        cur_gypkr_update.execute(sql_stock_update, (gypkr_price,'(주)개양파코리아'))
+        cur_dbbio_update.execute(sql_stock_update, (dbbio_price,'(주)단밤바이오'))
+        
+        conn_stock.commit()
+        conn_stock.close()
+
+        stock = discord.Embed(title=f"현재 주가 {time.strftime('%Y.%m.%d - %H:%M:%S')}", color=0x62c1cc)
+        stock.add_field(name = "(주)개양파코리아", value = f'{gypkr_price}({round(gypkr_rand,2)}%)',inline = False)
+        stock.add_field(name = "(주)단밤바이오", value = f'{dbbio_price}({round(dbbio_rand,2)}%)',inline = False)
+        await client.get_channel(792887565589282827).send(embed=stock)
         
 @client.event
 async def on_message(message):
     if message.author == client.user:
         return
+
+    if message.content.startswith('!송금'):
+        wire_data = message.content.split()
+        wire_sender_id = message.author.id
+        wire_rr = wire_data[1][2:][:-1]
+        wire_money = int(wire_data[2])
+        print(f'{wire_data}, {wire_sender_id}, {wire_rr}')
+
+        conn_wire = pymysql.connect(
+            user = 'jonsu0129',
+            password = passwd_token,
+            host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+            db = 'testDB',
+            charset = 'utf8'
+        )
+
+        cur_wire_user_money = conn_wire.cursor()
+        sql_wire_user_money = "SELECT * FROM testDB.userTable WHERE userId = %s"
+
+        wire_user_money = cur_wire_user_money.execute(sql_wire_user_money, message.author.id)
+        wire_user_money = int(cur_wire_user_money.fetchall()[0][2])
+
+
+        if(wire_user_money < wire_money):
+            await message.channel.send(f"<@{message.author.id}> 보유 골드가 부족합니다. (보유 골드 : {wire_user_money}G, 보낼 골드 : {wire_money}G)")
+        else:
+            cur_wire_rr_money = conn_wire.cursor()
+            sql_wire_rr_money = "SELECT * FROM testDB.userTable WHERE userId = %s"
+
+            wire_rr_money = cur_wire_rr_money.execute(sql_wire_rr_money, wire_rr)
+            wire_rr_money =int(cur_wire_rr_money.fetchall()[0][2])
+
+            cur_wire_update_money_1 = conn_wire.cursor()
+            sql_wire_update_money_1 = "UPDATE `testDB`.`userTable` SET money = %s WHERE userId = %s;"
+
+            cur_wire_update_moeny_2 = conn_wire.cursor()
+            sql_wire_update_money_2 = "UPDATE `testDB`.`userTable` SET money = %s WHERE userId = %s;"
+
+
+            wire_user_money -= wire_money
+            wire_rr_money += wire_money
+            
+            await message.channel.send(f'<@{message.author.id}>님이 <@{wire_rr}>님에게 {wire_money}G를 송금하였습니다. (보유 골드 : {wire_user_money}G)')
+
+            cur_wire_update_money_1.execute(sql_wire_update_money_1, ({wire_user_money},{message.author.id}))
+
+            cur_wire_update_moeny_2.execute(sql_wire_update_money_2, ({wire_rr_money},{wire_rr}))
+
+            conn_wire.commit()
+            conn_wire.close()
     
-<<<<<<< HEAD
-    if message.content.startswith('언퉤'):
-        await message.channel.send(f"2hogi's pick : ★{random.choice(lw)}★")   
-    
-    if message.content.startswith('경매! '):
-        auction = int(message.content[4:])
-        auction_4_1 = int((auction*0.95) - (auction*0.95/4))
-        auction_4_2 = int(((auction*0.95) - (auction*0.95/4))/ 1.1)
-        auction_8_1 = int((auction*0.95) - (auction*0.95/8))
-        auction_8_2 = int(((auction*0.95) - (auction*0.95/8)) / 1.1)
+    if message.content.startswith('복권지급! '):
+        if message.author.id == 268568994108145674:
+            conn_add_lt = pymysql.connect(
+            user = 'jonsu0129',
+            password = passwd_token,
+            host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+            db = 'testDB',
+            charset = 'utf8'
+            )
+            lt_num = message.content[6:]
+            cur_add_lt = conn_add_lt.cursor()
+            sql_add_lt = "update userTable set ltcount = ltcount + %s"
+            
+            cur_add_lt.execute(sql_add_lt, (lt_num))
+            conn_add_lt.commit()
+            conn_add_lt.close()
+            await message.channel.send(f'복권 {lt_num}개가 지급되었습니다.')
+        else:
+            await message.channel.send(f'<@{message.author.id}>접근 권한이 없습니다!')
         
-        embed = discord.Embed(title=f"경매 입찰가 <{auction}G>", color=0x62c1cc)
-        embed.add_field(name = "4인", value = f"손익분기점 : {auction_4_1} \n 개이득가 : {auction_4_2}", inline=True)
-        embed.add_field(name = "8인", value = f"손익분기점 : {auction_8_1} \n 개이득가 : {auction_8_2}", inline=True)
-        await message.channel.send(embed=embed)
+    if message.content.startswith('복권초기화!'):
+        if message.author.id == 268568994108145674:
+            conn_lt_init = pymysql.connect(
+            user = 'jonsu0129',
+            password = passwd_token,
+            host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+            db = 'testDB',
+            charset = 'utf8'
+            )
+            cur_lt_init = conn_lt_init.cursor()
+            sql_lt_init = "update userTable set ltcount = 3"
+            
+            cur_lt_init.execute(sql_lt_init)
+            conn_lt_init.commit()
+            conn_lt_init.close()
+            await message.channel.send(f'복권이 3개로 초기화됐습니다.')
+        else:
+            await message.channel.send(f'<@{message.author.id}>접근 권한이 없습니다!')
     
-=======
->>>>>>> 9e2237b (aa)
+    if message.content.startswith('주사위!'):
+        await message.channel.send(f"<@{message.author.id}> 주사위 : ★ {random.randint(1,100)} ★ (1~100)")
+    
+    if message.content.startswith('개양파'):
+        await message.channel.send(f"빠큐")
+    
+    if message.content.startswith('명령어!'):
+        help = discord.Embed(title=f"명령어!", color=0x62c1cc)
+        help.add_field(name = "버스!", value = f'4인 기준 분배금을 알려줍니다.', inline = False)
+        help.add_field(name = "검색!", value = f'검색! (닉네임)으로 간단한 정보를 보여줍니다.', inline = False)
+        help.add_field(name = "토끼", value = f'귀여운 토끼가 나옵니다.', inline = False)
+        help.add_field(name = "졸려", value = f'목혹호 2호기가 반응을 해줍니다.', inline = False)
+        help.add_field(name = "잠와", value = f'목혹호 2호기가 반응을 해줍니다.', inline = False)
+        help.add_field(name = "뭐먹", value = f'목혹호 2호기가 음식을 추천해줍니다.', inline = False)
+        help.add_field(name = "뭐먹리스트", value = f'목혹호 2호기의 음식 추천 리스트를 보여줍니다.', inline = False)
+        help.add_field(name = "뭐먹 추가/삭제", value = f'뭐먹리스트의 음식을 추가/삭제 할 수 있습니다. ex) 뭐먹 (음식) 삭제, 뭐먹 (음식) 추가', inline = False)
+        help.add_field(name = "가위바위보", value = f'목혹호 2호기와 가위바위보를 할 수 있습니다. ex) 가위바위보 가위', inline = False)
+        help.add_field(name = "lotto!", value = f'목혹호 2호기가 로또 번호를 추천해줍니다.', inline = False)
+        help.add_field(name = "오늘도", value = f'목혹호 2호기가 반응을 해줍니다.', inline = False)
+        help.add_field(name = "행복하세요?", value = f'목혹호 2호기가 반응을 해줍니다.', inline = False)
+        help.add_field(name = "야", value = f'목혹호 2호기가 \'야\' 갯수에 따라 반응을 해줍니다.', inline = False)
+        help.add_field(name = "ㅋㅋㅋㅋ", value = f'목혹호 2호기가 일정 확률로 반응을 해줍니다.', inline = False)
+        help.add_field(name = "돌깎자!", value = f'어빌리티 스톤을 깎을 수 있습니다. (test)', inline = False)
+        help.add_field(name = "언퉤", value = f'목혹호 2호기가 퇴근할 시간을 말해줍니다.',inline = False)
+        help.add_field(name = "주식!", value = f'현재 주가를 보여줍니다.',inline = False)
+        help.add_field(name = "주식구매!", value = f'주식을 구매합니다. ex) 주식구매! 5 개양파코리아',inline = False)
+        help.add_field(name = "주식판매!", value = f'주식을 판매합니다. ex) 주식판매! 5 개양파코리아',inline = False)
+        await message.channel.send(embed=help)
+        
+    if message.content.startswith('도박명령어!'):
+        gamble_help = discord.Embed(title=f"도박명령어!", color=0x62c1cc)
+        gamble_help.add_field(name = "배팅가위바위보", value = f'목혹호와 가위바위보하여 이기면 배팅금만큼 골드를 얻습니다.\nex) 배팅가위바위보 가위 1000', inline = False)
+        gamble_help.add_field(name = "복권!", value = f'복권을 긁습니다. 티켓을 하나 소모합니다.', inline = False)
+        gamble_help.add_field(name = "룰렛! ", value = f'룰렛을 돌립니다. 룰렛! 뒤에 베팅할 금액을 적습니다. ex)룰렛! 100\n당첨 배율 : 7️⃣7️⃣7️⃣(x5000), 🔴🔴🔴(x777), 🟡🟡🟡(x333), 🟢🟢🟢(x77), 🔵🔵🔵(x33), 🟣🟣🟣(x15), ⚪⚪⚪(x5)\n※룰렛에 각 도형이 나올 확률은 다릅니다.※', inline = False)
+        gamble_help.add_field(name = "랭킹!", value = f'골드 랭킹을 확인합니다.', inline = False)
+        gamble_help.add_field(name = "내정보!", value = f'정보를 확인합니다.', inline = False)
+        gamble_help.add_field(name = "등록!", value = f'계정을 등록하고 10000G를 받습니다.', inline = False)
+        gamble_help.add_field(name = "파산!", value = f'파산 신청을 합니다. 보유 골드가 1000G이하일 때 5000G를 받습니다.', inline = False)
+        await message.channel.send(embed=gamble_help)
+        
+    if message.content.startswith('등록!'):
+        conn = pymysql.connect(
+            user = 'jonsu0129',
+            password = passwd_token,
+            host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+            db = 'testDB',
+            charset = 'utf8'
+        )
+        cur = conn.cursor()
+        cur_check_insert = conn.cursor()
+
+        sql_check = "SELECT EXISTS(SELECT * FROM userTable WHERE userId = %(userId)s)"
+        cur_check_insert.execute(sql_check, {"userId": {message.author.id}})
+        chch = cur_check_insert.fetchone()[0]
+        
+        if chch == 1:
+            await message.channel.send(f'<@{message.author.id}>이미 존재하는 id입니다.')
+        else:
+            cur.execute(f"INSERT INTO userTable VALUES('{message.author}','{message.author.id}',10000, NULL, 3, 0, 0)")
+            await message.channel.send(f'<@{message.author.id}>등록되었습니다.(+10000G)')
+            conn.commit()
+            conn.close()
+
+    if message.content.startswith('데이터삭제!'):
+        conn_del = pymysql.connect(
+            user = 'jonsu0129',
+            password = passwd_token,
+            host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+            db = 'testDB',
+            charset = 'utf8'
+        )
+        cur_del = conn_del.cursor()
+        cur_check_delete = conn_del.cursor()
+        sql = "DELETE FROM userTable WHERE userId = %(userId)s"
+
+        sql_check = "SELECT EXISTS(SELECT * FROM userTable WHERE userId = %(userId)s)"
+        cur_check_delete.execute(sql_check, {"userId": {message.author.id}})
+        chch = cur_check_delete.fetchone()[0]
+        
+        if chch == 1:
+            cur_del.execute(sql, {"userId" : {message.author.id}})
+            conn_del.commit()
+            conn_del.close()
+            await message.channel.send(f'<@{message.author.id}> 데이터가 삭제되었습니다.')
+        else:
+            await message.channel.send(f'<@{message.author.id}> 데이터가 존재하지 않습니다.')
+
+    if message.content.startswith('내정보!'):
+        conn_info = pymysql.connect(
+        user = 'jonsu0129',
+        password = passwd_token,
+        host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+        db = 'testDB',
+        charset = 'utf8'
+        )
+    
+        cur_info = conn_info.cursor()
+        lsp_info = "SELECT * FROM testDB.userTable WHERE userId = %(userId)s"
+        cur_info.execute(lsp_info, {"userId": {message.author.id}})
+        user_info = cur_info.fetchall()
+        userName = user_info[0][0]
+        userMoney = user_info[0][2]
+        user_lt = user_info[0][4]
+        
+        gamble_info = discord.Embed(title=f"{userName}", color=0x62c1cc)
+        gamble_info.add_field(name = "보유 골드", value = f'{userMoney}G', inline = False)
+        gamble_info.add_field(name = "보유 티켓", value = f'{user_lt}개', inline = False)
+        gamble_info.add_field(name = "(주)개양파코리아", value = f'{user_info[0][5]}주', inline = False)
+        gamble_info.add_field(name = "(주)단밤바이오", value = f'{user_info[0][6]}주', inline = False)
+        await message.channel.send(embed=gamble_info)
+
+        conn_info.close()
+        
+    if message.content.startswith('주식구매! '):
+        conn_stock_buy = pymysql.connect(
+            user = 'jonsu0129',
+            password = passwd_token,
+            host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+            db = 'testDB',
+            charset = 'utf8'
+        )
+        msg_split = message.content.split()
+        stock_buy_name = msg_split[2]
+        stock_buy_num = int(msg_split[1])
+
+        cur_price_stock_buy = conn_stock_buy.cursor()
+        sql_price_stock_buy = "SELECT * FROM testDB.discordStock WHERE stockName = %s"
+
+        price_stock_buy = cur_price_stock_buy.execute(sql_price_stock_buy, '(주)' + stock_buy_name)
+        price_stock_buy = cur_price_stock_buy.fetchall()[0][1]
+        
+        cur_user_money = conn_stock_buy.cursor()
+        sql_user_money = "SELECT * FROM testDB.userTable WHERE userId = %s"
+
+        user_money_stock_buy = cur_user_money.execute(sql_user_money, message.author.id)
+        user_money_stock_buy = cur_user_money.fetchall()[0][2]
+
+        if user_money_stock_buy < price_stock_buy * stock_buy_num:
+            await message.channel.send(f'<@{message.author.id}> 보유 골드가 부족합니다. (보유 골드 : {user_money_stock_buy}G) (주식 가격 : {price_stock_buy * stock_buy_num}G)')    
+        else:
+            user_money_stock_buy -= price_stock_buy * stock_buy_num
+            
+            cur_user_stock = conn_stock_buy.cursor()
+            sql_user_stock = f"SELECT `(주){stock_buy_name}` from testDB.userTable where userId = %s"
+            user_stock = cur_user_stock.execute(sql_user_stock, message.author.id)
+            user_stock = cur_user_stock.fetchall()[0][0]
+            user_stock += stock_buy_num
+
+            cur_stock_buy = conn_stock_buy.cursor()
+            sql_stock_buy = f"UPDATE testDB.userTable SET `money` = %s, `(주){stock_buy_name}` = %s WHERE `userId` = %s"
+            cur_stock_buy.execute(sql_stock_buy, (user_money_stock_buy, user_stock, message.author.id))
+            
+            conn_stock_buy.commit()
+            conn_stock_buy.close()
+            await message.channel.send(f'<@{message.author.id}> (주){stock_buy_name}을(를) {stock_buy_num}주 구매하였습니다. (보유 골드 : {user_money_stock_buy}G)\n(보유 (주){stock_buy_name} : {user_stock}주)')
+
+    if message.content.startswith('주식판매! '):
+        conn_stock_sell = pymysql.connect(
+            user = 'jonsu0129',
+            password = passwd_token,
+            host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+            db = 'testDB',
+            charset = 'utf8'
+        )
+        msg_split = message.content.split()
+        stock_sell_name = msg_split[2]
+        stock_sell_num = int(msg_split[1])
+
+        cur_price_stock_sell = conn_stock_sell.cursor()
+        sql_price_stock_sell = "SELECT * FROM testDB.discordStock WHERE stockName = %s"
+        price_stock_sell = cur_price_stock_sell.execute(sql_price_stock_sell, '(주)' + stock_sell_name)
+        price_stock_sell = cur_price_stock_sell.fetchall()[0][1]
+
+        cur_user_stock = conn_stock_sell.cursor()
+        sql_user_stock = f"SELECT `(주){stock_sell_name}` from testDB.userTable where userId = %s"
+        user_stock = cur_user_stock.execute(sql_user_stock, message.author.id)
+        user_stock = cur_user_stock.fetchall()[0][0]
+
+        if user_stock < stock_sell_num:
+            await message.channel.send(f'<@{message.author.id}> 보유 주식이 부족합니다. (보유 (주){stock_sell_name} : {user_stock}주)')    
+        else:
+            cur_user_money = conn_stock_sell.cursor()
+            sql_user_money = "SELECT * FROM testDB.userTable WHERE userId = %s"
+            user_money_stock_sell = cur_user_money.execute(sql_user_money, message.author.id)
+            user_money_stock_sell = cur_user_money.fetchall()[0][2]
+            user_stock -= stock_sell_num
+
+            user_money_stock_sell += price_stock_sell * stock_sell_num
+
+            cur_stock_sell = conn_stock_sell.cursor()
+            sql_stock_sell = f"UPDATE testDB.userTable SET `money` = %s, `(주){stock_sell_name}` = %s WHERE `userId` = %s"
+            cur_stock_sell.execute(sql_stock_sell, (user_money_stock_sell, user_stock, message.author.id))
+            
+            conn_stock_sell.commit()
+            conn_stock_sell.close()
+            await message.channel.send(f'<@{message.author.id}> (주){stock_sell_name}을(를) {stock_sell_num}주 판매하였습니다. (보유 골드 : {user_money_stock_sell}G)\n(보유 (주){stock_sell_name} : {user_stock}주)')
+        
+    if message.content.startswith('주식!'):
+        conn_stock = pymysql.connect(
+            user = 'jonsu0129',
+            password = passwd_token,
+            host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+            db = 'testDB',
+            charset = 'utf8'
+        )
+
+        cur_stock = conn_stock.cursor()
+        sql_stock = "SELECT * FROM testDB.discordStock"
+
+        cur_stock.execute(sql_stock)
+        stock_tuple = cur_stock.fetchall()
+
+        stock = discord.Embed(title=f"현재 주가 {time.strftime('%Y.%m.%d - %H:%M:%S')}", color=0x62c1cc)
+        stock.add_field(name = "(주)개양파코리아", value = f'{stock_tuple[0][1]}G({round(last_gypkr_rand,2)}%)',inline = False)
+        stock.add_field(name = "(주)단밤바이오", value = f'{stock_tuple[1][1]}G({round(last_dbbio_rand,2)}%)',inline = False)
+        await message.channel.send(embed=stock)
+    
+    if message.content.startswith('룰렛! '):
+        conn_roulette = pymysql.connect(
+            user = 'jonsu0129',
+            password = passwd_token,
+            host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+            db = 'testDB',
+            charset = 'utf8'
+        )
+        roulette_bet = int(message.content[4:])
+
+        cur_roulette_money = conn_roulette.cursor()
+        cur_roulette_win = conn_roulette.cursor()
+
+        sql_money = "SELECT * FROM testDB.userTable WHERE userId = %(userId)s"
+        sql_roulette = "UPDATE userTable SET money = %s WHERE userID = %s"
+
+        userMoney_roulette = cur_roulette_money.execute(sql_money, {"userId": {message.author.id}})
+        userMoney_roulette = cur_roulette_money.fetchall()[0][2]
+
+        if userMoney_roulette < roulette_bet:
+            await message.channel.send(f'<@{message.author.id}>보유 골드가 부족합니다. (보유 골드 : {userMoney_roulette}G)')
+        else:
+
+            Roulette_list=['7️⃣','🔴','🔴','🟡','🟡','🟡','🟢','🟢','🟢','🟢','🟢','🔵','🔵','🔵','🔵','🔵','🔵','🔵','🔵','🟣','🟣','🟣','🟣','🟣','🟣','🟣','🟣','🟣','🟣','⚪','⚪','⚪','⚪','⚪','⚪','⚪','⚪','⚪','⚪','⚪','⚪','⚪']
+            Roulette_1 = random.choice(Roulette_list)
+            Roulette_2 = random.choice(Roulette_list)
+            Roulette_3 = random.choice(Roulette_list)
+
+            userMoney_roulette -= roulette_bet
+            
+            if Roulette_1 == Roulette_2 == Roulette_3 and Roulette_1 == '7️⃣':
+                userMoney_roulette += roulette_bet*5000
+                await message.channel.send(f'{Roulette_1}{Roulette_2}{Roulette_3}')
+                await message.channel.send(f'<@{message.author.id}> 당첨!! 상금 : {roulette_bet}x5000')
+            elif Roulette_1 == Roulette_2 == Roulette_3 and Roulette_1 == '🔴':
+                userMoney_roulette += roulette_bet*777
+                await message.channel.send(f'{Roulette_1}{Roulette_2}{Roulette_3}')
+                await message.channel.send(f'<@{message.author.id}> 당첨!! 상금 : {roulette_bet}x777 (보유 골드 : {userMoney_roulette}G)')
+            elif Roulette_1 == Roulette_2 == Roulette_3 and Roulette_1 == '🟡':
+                userMoney_roulette += roulette_bet*333
+                await message.channel.send(f'{Roulette_1}{Roulette_2}{Roulette_3}')
+                await message.channel.send(f'<@{message.author.id}> 당첨!! 상금 : {roulette_bet}x333 (보유 골드 : {userMoney_roulette}G)')
+            elif Roulette_1 == Roulette_2 == Roulette_3 and Roulette_1 == '🟢':
+                userMoney_roulette += roulette_bet*77
+                await message.channel.send(f'{Roulette_1}{Roulette_2}{Roulette_3}')
+                await message.channel.send(f'<@{message.author.id}> 당첨!! 상금 : {roulette_bet}x77 (보유 골드 : {userMoney_roulette}G)')
+            elif Roulette_1 == Roulette_2 == Roulette_3 and Roulette_1 == '🔵':
+                userMoney_roulette += roulette_bet*33
+                await message.channel.send(f'{Roulette_1}{Roulette_2}{Roulette_3}')
+                await message.channel.send(f'<@{message.author.id}> 당첨!! 상금 : {roulette_bet}x33 (보유 골드 : {userMoney_roulette}G)')
+            elif Roulette_1 == Roulette_2 == Roulette_3 and Roulette_1 == '🟣':
+                userMoney_roulette += roulette_bet*15
+                await message.channel.send(f'{Roulette_1}{Roulette_2}{Roulette_3}')
+                await message.channel.send(f'<@{message.author.id}> 당첨!! 상금 : {roulette_bet}x15 (보유 골드 : {userMoney_roulette}G)')
+            elif Roulette_1 == Roulette_2 == Roulette_3 and Roulette_1 == '⚪':
+                userMoney_roulette += roulette_bet*5
+                await message.channel.send(f'{Roulette_1}{Roulette_2}{Roulette_3}')
+                await message.channel.send(f'<@{message.author.id}> 당첨!! 상금 : {roulette_bet}x5 (보유 골드 : {userMoney_roulette}G)')
+            else:
+                await message.channel.send(f'{Roulette_1}{Roulette_2}{Roulette_3}')
+                await message.channel.send(f'<@{message.author.id}> 꽝! (보유 골드 : {userMoney_roulette}G)')
+                
+            cur_roulette_win.execute(sql_roulette, (userMoney_roulette, message.author.id))
+            conn_roulette.commit()
+            conn_roulette.close()
+        
+    if message.content.startswith('복권!'):
+        conn_lotto = pymysql.connect(
+        user = 'jonsu0129',
+        password = passwd_token,
+        host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+        db = 'testDB',
+        charset = 'utf8'
+        )
+        
+        cur_lotto_1 = conn_lotto.cursor()
+        sql_lotto_1 = "SELECT * FROM testDB.userTable WHERE userId = %(userId)s"
+        cur_lotto_1.execute(sql_lotto_1, {"userId": {message.author.id}})
+        userMoney_lotto = cur_lotto_1.fetchall()[0][2]
+        
+        cur_lotto_3= conn_lotto.cursor()
+        sql_lotto_3 = "SELECT * FROM testDB.userTable WHERE userId = %(userId)s"
+        cur_lotto_3.execute(sql_lotto_3, {"userId": {message.author.id}})
+        ticket_lotto = cur_lotto_3.fetchall()[0][4]
+        
+        if ticket_lotto == 0:
+            await message.channel.send(f'<@{message.author.id}>보유 복권 티켓이 부족합니다.')
+        else:
+            lotto_dice = random.randint(0,100)
+
+            cur_lotto_2 = conn_lotto.cursor()
+            sql_lotto_2 = "UPDATE `testDB`.`userTable` SET money = %s, ltcount = %s WHERE userName = %s;"
+
+            print(lotto_dice)
+            ticket_lotto -= 1
+            if lotto_dice == 100:
+                userMoney_lotto += 1000000
+                await message.channel.send(f'★★★★★★★★★★★★\n★★★  1등 당첨  ★★★\n★★★★★★★★★★★★')
+                await message.channel.send(f'<@{message.author.id}>님이 1등에 당첨되셨습니다. (상금 1000000G) (남은 티켓 {ticket_lotto}개)')
+            elif lotto_dice >= 96:
+                userMoney_lotto += 247500
+                await message.channel.send(f'★★★★★★★★★★\n★★★  2등2  ★★★\n★★★★★★★★★★')
+                await message.channel.send(f'<@{message.author.id}>님이 2등에 당첨되셨습니다. (상금 247500G) (남은 티켓 {ticket_lotto}개)')
+            elif lotto_dice >= 86:
+                userMoney_lotto += 99000
+                await message.channel.send(f'★★★★\n★ 3등 ★\n★★★★')
+                await message.channel.send(f'<@{message.author.id}>님이 3등에 당첨되셨습니다. (상금 99000G) (남은 티켓 {ticket_lotto}개)')
+            elif lotto_dice >= 66:
+                userMoney_lotto += 44500
+                await message.channel.send(f'★4등★')
+                await message.channel.send(f'<@{message.author.id}>님이 4등에 당첨되셨습니다. (상금 44500G) (남은 티켓 {ticket_lotto}개)')
+            elif lotto_dice >= 1:
+                userMoney_lotto += 1000
+                await message.channel.send(f'5등')
+                await message.channel.send(f'<@{message.author.id}>님이 5등에 당첨되셨습니다. (상금 1000G) (남은 티켓 {ticket_lotto}개)')
+            elif lotto_dice == 0:
+                userMoney_lotto += 0
+                await message.channel.send(f'꽝꽝꽝꽝꽝\n꽝꽝꽝꽝꽝\n꽝꽝꽝꽝꽝\n꽝꽝꽝꽝꽝\n꽝꽝꽝꽝꽝')
+                await message.channel.send(f'<@{message.author.id}>님이 꽝에 당첨되셨습니다. (상금 0G) (남은 티켓 {ticket_lotto}개)')
+
+            cur_lotto_2.execute(sql_lotto_2, ({userMoney_lotto},{ticket_lotto},{message.author}))
+            conn_lotto.commit()
+            conn_lotto.close()    
+        
+    if message.content.startswith('배팅가위바위보 '):
+        lsp_user = ''
+        lsp_list=['가위','바위','보']
+        lsp_client = random.choice(lsp_list)
+        lsp_bat = 0
+        
+        conn_lsp = pymysql.connect(
+            user = 'jonsu0129',
+            password = passwd_token,
+            host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+            db = 'testDB',
+            charset = 'utf8'
+        )
+        
+        lsp_cur_1 = conn_lsp.cursor()
+        lsp_cur_2 = conn_lsp.cursor()
+        lsp_sql_1 = "SELECT * FROM testDB.userTable WHERE userId = %(userId)s"
+        lsp_sql_2 = "UPDATE userTable SET money = %s WHERE userID = %s"
+        
+        lsp_cur_1.execute(lsp_sql_1, {"userId": {message.author.id}})
+        userMoney = lsp_cur_1.fetchall()[0][2]
+        
+        if message.content.startswith('배팅가위바위보 가위 '): #12
+            lsp = '가위'
+            lsp_bat = int(message.content[11:])
+            if userMoney < lsp_bat:
+                await message.channel.send(f'보유 골드가 부족합니다!(보유 골드 : {userMoney}G)')
+            else:
+                if lsp_client == '가위':
+                    await message.channel.send(f'{lsp_client}! 당신은 비겼습니다.\n<@{message.author.id}>님의 현재 골드 {userMoney}G(+0G)')
+                if lsp_client == '바위':
+                    userMoney -= lsp_bat
+                    lsp_cur_2.execute(lsp_sql_2, (userMoney, message.author.id))
+                    await message.channel.send(f'{lsp_client}! 당신은 졌습니다.\n<@{message.author.id}>님의 현재 골드 {userMoney}G(-{lsp_bat}G)')
+                if lsp_client == '보':
+                    userMoney += lsp_bat
+                    await message.channel.send(f'{lsp_client}! 당신은 이겼습니다.\n<@{message.author.id}>님의 현재 골드 {userMoney}G(+{lsp_bat}G)')
+                    lsp_cur_2.execute(lsp_sql_2, (userMoney, message.author.id))
+        if message.content.startswith('배팅가위바위보 바위 '):
+            lsp = '바위'
+            lsp_bat = int(message.content[11:])
+            if userMoney < lsp_bat:
+                await message.channel.send(f'보유 골드가 부족합니다!(보유 골드 : {userMoney}G)')
+            else:
+                if lsp_client == '가위':
+                    userMoney += lsp_bat
+                    await message.channel.send(f'{lsp_client}! 당신은 이겼습니다.\n<@{message.author.id}>님의 현재 골드 {userMoney}G(+{lsp_bat}G)')
+                    lsp_cur_2.execute(lsp_sql_2, (userMoney, message.author.id))
+                if lsp_client == '바위':
+                    await message.channel.send(f'{lsp_client}! 당신은 비겼습니다.\n<@{message.author.id}>님의 현재 골드 {userMoney}G(+0G)')
+                if lsp_client == '보':
+                    userMoney -= lsp_bat
+                    await message.channel.send(f'{lsp_client}! 당신은 졌습니다.\n<@{message.author.id}>님의 현재 골드 {userMoney}G(-{lsp_bat}G)')
+                    lsp_cur_2.execute(lsp_sql_2, (userMoney, message.author.id))
+        if message.content.startswith('배팅가위바위보 보 '):
+            lsp = '보'
+            lsp_bat = int(message.content[10:])
+            if userMoney < lsp_bat:
+                await message.channel.send(f'보유 골드가 부족합니다!(보유 골드 : {userMoney}G)')
+            else:
+                if lsp_client == '가위':
+                    userMoney -= lsp_bat
+                    await message.channel.send(f'{lsp_client}! 당신은 졌습니다.\n<@{message.author.id}>님의 현재 골드 {userMoney}G(-{lsp_bat}G)')
+                    lsp_cur_2.execute(lsp_sql_2, (userMoney, message.author.id))
+                if lsp_client == '바위':
+                    userMoney += lsp_bat
+                    await message.channel.send(f'{lsp_client}! 당신은 이겼습니다.\n<@{message.author.id}>님의 현재 골드 {userMoney}G(+{lsp_bat}G)')
+                    lsp_cur_2.execute(lsp_sql_2, (userMoney, message.author.id))
+                if lsp_client == '보':
+                    await message.channel.send(f'{lsp_client}! 당신은 비겼습니다.\n<@{message.author.id}>님의 현재 골드 {userMoney}G(+0G)')
+        conn_lsp.commit()
+        conn_lsp.close()
+        
+    if message.content.startswith('랭킹!'):
+        conn_rank = pymysql.connect(
+            user = 'jonsu0129',
+            password = passwd_token,
+            host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+            db = 'testDB',
+            charset = 'utf8'
+        )
+        
+        cur_rank_1 = conn_rank.cursor()
+        sql_rank_1 = '''UPDATE userTable A, (
+                        SELECT  
+                            B.userName,
+                            B.money,
+                            @rownum := @rownum + 1 AS RNUM
+                        FROM userTable B, (SELECT @rownum := 0) AS ROWNUM
+                        ORDER BY B.money DESC
+                        ) C
+                        SET 
+                            A.ranking = C.RNUM
+                        WHERE
+                            A.userName = C.userName'''
+        cur_rank_1.execute(sql_rank_1)
+        
+        conn_rank.commit()
+        
+        cur_rank_2 = conn_rank.cursor()
+        lsp_rank_2 = "SELECT userName, money, ranking FROM userTable order by money desc"
+        cur_rank_2.execute(lsp_rank_2)
+        user_rank = cur_rank_2.fetchall()
+
+        user_rank_list = discord.Embed(title=f"랭킹!(보유골드순)", color=0x62c1cc)
+        user_rank_list.add_field(name = "1등", value = f'{user_rank[0][0]}, {user_rank[0][1]}G', inline = False)
+        user_rank_list.add_field(name = "2등", value = f'{user_rank[1][0]}, {user_rank[1][1]}G', inline = False)
+        user_rank_list.add_field(name = "3등", value = f'{user_rank[2][0]}, {user_rank[2][1]}G', inline = False)
+        user_rank_list.add_field(name = "4등", value = f'{user_rank[3][0]}, {user_rank[3][1]}G', inline = False)
+        user_rank_list.add_field(name = "5등", value = f'{user_rank[4][0]}, {user_rank[4][1]}G', inline = False)
+        await message.channel.send(embed=user_rank_list)
+        
+        conn_rank.close()
+        
+    if message.content.startswith('파산!'):
+        conn_gu = pymysql.connect(
+            user = 'jonsu0129',
+            password = passwd_token,
+            host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+            db = 'testDB',
+            charset = 'utf8'
+            )
+        cur_gu_1 = conn_gu.cursor()
+        sql_gu_1 = "SELECT * FROM testDB.userTable WHERE userId = %(userId)s"
+        cur_gu_1.execute(sql_gu_1, {"userId": {message.author.id}})
+            
+        userMoney_gu = cur_gu_1.fetchall()[0][2]
+        if userMoney_gu <= 1000:
+            
+            cur_gu_2 = conn_gu.cursor()
+            sql_gu_2 = "UPDATE `testDB`.`userTable` SET `money` = %(money)s WHERE (`userName` = %(userName)s)"
+            userMoney_gu += 5000
+            cur_gu_2.execute(sql_gu_2, {'money' : {userMoney_gu},'userName' : {message.author}})
+            conn_gu.commit()
+            conn_gu.close()
+            
+            await message.channel.send(f'<@{message.author.id}>님이 파산 신청을 하였습니다. 보유 골드 {userMoney_gu}G(+5000G)')
+            
+        else:
+            await message.channel.send(f'<@{message.author.id}>보유 골드가 1000G 이하일 때 파산 신청을 할 수 있습니다. (보유 골드{userMoney_gu}G)')
+        
+        
+    if message.content.startswith('<@885425395397177345>'):
+        if message.author.dm_channel:
+            await message.author.dm_channel.send("왜불러")
+        elif message.author.dm_channel is None:
+            await message.author.create_dm()
+            await message.author.dm_channel.send("왜불러")
+
+    if message.content.startswith('언퉤'):
+        go_home = ['16시','17시','18시','19시','20시','21시','22시','지금!']
+        await message.channel.send(f'<@{message.author.id}>은(는) {random.choice(go_home)} 퉤근')
+
     if message.content.startswith('버스! '):
         bus_msg = message.content.split()
         
         bus_mc = int(bus_msg[1])
         bus_ds = int(bus_msg[2])
         bus_gm = [0,0,0,0,0,0]
-<<<<<<< HEAD
-=======
-        bus_gm_sum = 0
->>>>>>> 9e2237b (aa)
         bus_res = bus_ds - bus_mc
+        bus_at = 0
         
         for i in range(len(bus_msg)-3):
             bus_gm[i] = int(bus_msg[3+i])
         
         for j in range(len(bus_msg)-3):
-            bus_res += bus_gm[j]
-<<<<<<< HEAD
+            bus_at += bus_gm[j]
         
-        bus_res = bus_res * 0.95 / 4
+        bus_res = (bus_res + bus_at) * 0.95 / 4
         
-        await message.channel.send(f'1인당 : {bus_res}')
-=======
-            bus_gm_sum += bus_gm[j]
-        
-        bus_res = bus_res * 0.95 / 4
-
-        embed = discord.Embed(title=f"버스 분배(4인 기준)", color=0x62c1cc)
-        embed.add_field(name = "미참", value = f'{bus_mc}', inline =True)
+        embed = discord.Embed(title=f"4인 버스 기준", color=0x62c1cc)
+        embed.add_field(name = "미참", value = f'{bus_mc}', inline = True)
         embed.add_field(name = "독식", value = f'{bus_ds}', inline = True)
-        embed.add_field(name = "경매합", value = f'{bus_gm_sum}', inline = True)
-        embed.add_field(name = "1인당", value = f'{bus_res}', inline = False)
+        embed.add_field(name = "경매", value = f'{bus_at}', inline = True)
+        embed.add_field(name = "분배금", value = f'{bus_res}', inline = False)
+        embed.add_field(name = "주의", value = f'※미참을 각자 받았을 때 기준※', inline = False)
         await message.channel.send(embed=embed)
->>>>>>> 9e2237b (aa)
-        
-    
-    if message.content.startswith('오마이가쉬'):
-        await message.channel.send(f'돈츄노암어세비지?')
-    
-    if message.content.startswith('나는'):
-        if message.content.endswith('~'):
-            name = message.content[2:]
-            await message.channel.send(f'너도{name}')
   
-    #공대생성 
-    if message.content.startswith('!공대생성'): #!공대생성 공대이름 캐1 캐2 캐3 //// 4
-        ms = await message.channel.send(f'잠시만여 ㅇㅅㅇ')
-        class_count = message.content.count(' ')
-        raid_tmp = message.content.split(' ')
-        if(raid_tmp[0] == '!공대생성'): #명령어 확인
-            raid_name = raid_tmp[1]
-            raid_dic[raid_name] = raid(raid_tmp, raid_name, class_count)
-            raid_dic[raid_name].cal_avg()
-        else:
-            await message.channel.send(f'※check command※')
-        if raid_dic[raid_name].set_party() == 0:
-            await message.channel.send(f'명령어를 확인해주세요')
-        else:
-            embed = discord.Embed(title=f"{raid_name}", color=0x62c1cc)
-            embed.add_field(name = "파티1", value = f'{raid_dic[raid_name].party_1}', inline = False)
-            embed.add_field(name = "파티2", value = f'{raid_dic[raid_name].party_2}', inline = False)
-            embed.add_field(name = "lv평균", value = f'{raid_dic[raid_name].lv_avg:.2f}', inline = False)
-            await message.channel.send(embed=embed)
-        await ms.delete()
-        
     if message.content.startswith('사사게! '):
         ssg_msg = ''
         keyword_ori = message.content[5:]
@@ -422,9 +896,6 @@ async def on_message(message):
                     embed.add_field(name = "보석", value = f"{user_jewel_list}", inline=True)
                 embed.add_field(name = "특성", value = f"{user_character}", inline=True)
                 await message.channel.send(embed=embed)
-                
-    if message.content.startswith('빠삐는'):
-        await message.channel.send(f'사람을 찢어...!')    
     
     if message.content.startswith('토끼'):
         global rabbit_msg
@@ -436,34 +907,59 @@ async def on_message(message):
         await message.channel.send(f'잘자요')
     if message.content.startswith('잠와'):
         await message.channel.send(f'잘자요')
-
-    if message.content.startswith('$'):
-        o_dic[message.id] = party(message)
-        await message.add_reaction('⭕')
-
             
 #'뭐먹' 응답
-# food = ['치킨','피자','중식','초밥','떡볶이','햄버거','족발보쌈','갈비탕','돈까스','회','찜닭','삼겹살','편의점','컵라면','굶어','국밥','냉면','파스타','마라탕']
     if message.content.startswith('뭐먹'):
+        conn_mm = pymysql.connect(
+        user = 'jonsu0129',
+        password = 'rlawnstn!23',
+        host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+        db = 'testDB',
+        charset = 'utf8'
+        )
+        
+        cur_mm = conn_mm.cursor()
+        lsp_mm = "SELECT mm_list FROM mmTable"
+        
+        cur_mm_add = conn_mm.cursor()
+        lsp_mm_add = f"INSERT INTO `testDB`.`mmTable` (`mm_list`) VALUES ('{message.content[3:-3]}')"
+        
+        cur_mm_del = conn_mm.cursor()
+        lsp_mm_del = f"DELETE FROM mmTable WHERE mm_list = %(mm_list)s"
+        
+        cur_mm.execute(lsp_mm)
+        mm_list = cur_mm.fetchall()
+        mm = ""
+        for i in mm_list:
+            if mm == "":
+                mm += i[0]
+            else:
+                mm += ', ' + i[0]
+                
+        mm_li = mm.split(', ')
         if message.content.endswith(' 추가'):
             try:
-                food.index(message.content[3:-3])
+                mm_li.index(message.content[3:-3])
                 await message.channel.send(f'이미 존재하는 음식입니다.({message.content[3:-3]})')
             except ValueError as ex:
-                food.append(message.content[3:-3])
-                await message.channel.send(f'{message.content[3:-3]}(이)가 추가되었습니다.') 
+                cur_mm_add.execute(lsp_mm_add)
+                await message.channel.send(f'{message.content[3:-3]}(이)가 추가되었습니다.')
                 
         elif message.content.endswith(' 삭제'):
             try:
-                food.remove(message.content[3:-3])
+                mm_li.index(message.content[3:-3])
+                cur_mm_del.execute(lsp_mm_del, {"mm_list": {message.content[3:-3]}})
                 await message.channel.send(f'{message.content[3:-3]}(이)가 삭제되었습니다.')
             except ValueError as ex:
                 await message.channel.send(f'{message.content[3:-3]}(이)가 리스트에 존재하지 않습니다.')
         elif message.content == '뭐먹리스트':
-            await message.channel.send(f'{food}')
+            await message.channel.send(f'{mm}')
         else:
-            choice_food = random.choice(food)
+            choice_food = random.choice(mm_li)
             await message.channel.send(f"2hogi's pick : ★{choice_food}★")
+            
+        conn_mm.commit()
+        conn_mm.close() 
             
             
 #가위바위보----------------------------
@@ -498,7 +994,7 @@ async def on_message(message):
                 await message.channel.send(f'{lsp_client}! 당신은 비겼습니다.')
                 
 #로또 번호 
-    if message.content.startswith('/lotto'):
+    if message.content.startswith('lotto!'):
         lotto_num = []
         while len(lotto_num) < 6:
             tmp_num = random.randint(1,45)
@@ -506,65 +1002,33 @@ async def on_message(message):
                 lotto_num.append(tmp_num)
         lotto_num.sort()
         await message.channel.send(f"2hogi's pick : ★{lotto_num}★")
-#'대답' 응답
-    if message.content.startswith('대답'):
-       await message.channel.send('ㅇㅅㅇ')
-
-    if message.content.startswith('승'):
-        if message.author.id == 268573021210542080:
-           await message.channel.send(f'<@{message.author.id}>호!')
-
-#'2호기' 응답 
-    if message.content.startswith('2호기'):
-       await message.channel.send('why?')
 #'오늘도' 응답     
     if message.content.startswith('오늘도'):
-        await message.channel.send('파이팅!')
+        if random.randint(0,99) == 77:
+            await message.channel.send('★★★★★\n★파이팅★\n★★★★★')
+        else:
+            await message.channel.send('파이팅!')
         
 #'행복하세요?' 응답
     if message.content.startswith('행복하세요?'):
         await message.channel.send('행복하세요~')
-#'니얼굴' 응답
-    if message.content.startswith('니얼굴'):
-         if message.author.id == 279906131017465857:
-           await message.channel.send(f'<@{message.author.id}>쭈꾸미')
 #'야' 응답
     if message.content.startswith('야'):
         user_msg = list(message.content)
         a = int(user_msg.count('야'))
 
         if a > 15:
-            await message.channel.send(f'<@{message.author.id}>그만해')
-
-        elif message.author.id == 279906131017465857:
-            await message.channel.send(f'<@{message.author.id}>'+'뭐'*a)
-            
-            if message.author.dm_channel:
-                await message.author.send(f'뭐'*a)
-            elif message.author.dm_channel is None:
-                channel = await message.author.create_dm()
-                await channel.send('뭐'*a)            
+            await message.channel.send(f'<@{message.author.id}>그만해')        
 
         else:
             await message.channel.send('호'*a)
             
-<<<<<<< HEAD
+#'ㅋㅋㅋㅋ' 응답
     if message.content.startswith('ㅋ') or message.content.endswith('ㅋ'):
         p_zz = re.compile('ㅋㅋㅋㅋ')
         m_zz = p_zz.search(message.content)
         if m_zz != None and random.randint(0,9) == 1:
             await message.channel.send('ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ')
-=======
-#'ㅋㅋㅋㅋ' 응답
-    if message.content.startswith('ㅋ') or message.content.endswith('ㅋ'):
-        p_zz = re.compile('ㅋㅋㅋㅋ')
-        m_zz = p_zz.search(message.content)
-        if m_zz != None:
-            if message.author.id == 279906131017465857:
-                await message.channel.send(f'<@{message.author.id}>쪼개?')
-            else:
-                await message.channel.send('ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ')
->>>>>>> 9e2237b (aa)
         else:
             pass
         
@@ -622,9 +1086,8 @@ async def on_reaction_add(reaction, user):
             await client.get_channel(903196295869636658).send(f"★돌 시뮬★ <@{add_user}>(이)가 깎음!\n 각인1☝️  : {tmp_st.각인1} \n 각인2✌️ : {tmp_st.각인2} \n 감소 👎  : {tmp_st.감소} \n 확률 : {tmp_st.pbb_base}% \n {tmp_st.각인1.count('🔷')} {tmp_st.각인2.count('🔷')} {tmp_st.감소.count('🔷')} 돌입니다.")
         
         
-#사용자 이모지 자동 제거
 @client.event
-async def on_raw_reaction_add(payload):
+async def on_raw_reaction_add(payload): #이모지 추가할때 액션
     channel = await client.fetch_channel(payload.channel_id)
     message = await channel.fetch_message(payload.message_id)
     if channel.id == 891883835548119041:
@@ -634,15 +1097,6 @@ async def on_raw_reaction_add(payload):
             await message.remove_reaction('✌️', payload.member)
         if str(payload.emoji) == '👎' and payload.user_id != client.user.id and payload.user_id != 885419823499214859:
             await message.remove_reaction('👎', payload.member)
-    if channel.id == 891906660237471786:
-        if str(payload.emoji) == '👍' and payload.user_id != client.user.id and payload.user_id != 885419823499214859:
-            await message.remove_reaction('👍', payload.member)
-        if str(payload.emoji) == '👏' and payload.user_id != client.user.id and payload.user_id != 885419823499214859:
-            await message.remove_reaction('👏', payload.member)
-    if channel.id == 842483732827996172:
-        if str(payload.emoji) == '⭕' and payload.user_id != client.user.id and payload.user_id != 885419823499214859:
-            o_msg = await client.get_channel(892220976228618270).send(f'<@{payload.user_id}> 참가! ({o_dic[payload.message_id].main_msg.content[1:]})')
-            o_dic[payload.message_id].set_data(payload.user_id, o_msg)
     if str(payload.emoji) == '👋' and payload.user_id != client.user.id and payload.user_id != 885419823499214859:
         for i in range(1,3):
             time.sleep(0.3)
@@ -661,13 +1115,9 @@ async def on_raw_reaction_add(payload):
         await message.remove_reaction('😆', payload.member)
         
       
-@client.event
-async def on_raw_reaction_remove(payload): 
-    try:
-        if str(payload.emoji) == '⭕' and payload.user_id != client.user.id:
-            await o_dic[payload.message_id].msg_dic[payload.user_id].delete()
-    except KeyError as e:
-            pass 
-        
+@client.event 
+async def on_raw_reaction_remove(payload):  #이모지 지울때 액션
+    pass
+
 access_token = os.environ['BOT_TOKEN']
 client.run(access_token)
