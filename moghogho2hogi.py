@@ -9,7 +9,7 @@ from datetime import datetime
 
 intents = discord.Intents.default()
 client = discord.Client(intents=intents)
-passwd_token= os.environ['PASSWD_TOKEN']
+passwd_token = os.environ['PASSWD_TOKEN']
 
 global tmp_msg
 global tmp_index
@@ -304,6 +304,7 @@ async def on_message(message):
         help.add_field(name = "주식!", value = f'현재 주가를 보여줍니다.',inline = False)
         help.add_field(name = "주식구매!", value = f'주식을 구매합니다. ex) 주식구매! 5 개양파코리아',inline = False)
         help.add_field(name = "주식판매!", value = f'주식을 판매합니다. ex) 주식판매! 5 개양파코리아',inline = False)
+        help.add_field(name = "송금!", value = f'다른 유저에게 골드를 보낼 수 있습니다. ex) 송금! @유저언급 10000',inline = False)
         await message.channel.send(embed=help)
         
     if message.content.startswith('도박명령어!'):
