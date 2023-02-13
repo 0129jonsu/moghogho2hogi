@@ -188,7 +188,7 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    if message.content.startswith('!송금'):
+    if message.content.startswith('송금!'):
         wire_data = message.content.split()
         wire_sender_id = message.author.id
         wire_rr = wire_data[1][2:][:-1]
@@ -912,7 +912,7 @@ async def on_message(message):
     if message.content.startswith('뭐먹'):
         conn_mm = pymysql.connect(
         user = 'jonsu0129',
-        password = 'rlawnstn!23',
+        password = passwd_token,
         host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
         db = 'testDB',
         charset = 'utf8'
