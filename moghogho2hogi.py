@@ -61,6 +61,45 @@ class raid:
 global food
 food = ['치킨','피자','중식','초밥','떡볶이','햄버거','족발보쌈','갈비탕','돈까스','회','찜닭','삼겹살','편의점','컵라면','굶어','국밥','냉면','파스타','마라탕']
 
+#수상한큐브
+cube_susang_prob = {
+    '레어' : {
+        'first' : {
+            17544 : ['공격력 : +3%', '마력 : +3%', '크리티컬 확률 : +4%','데미지 : +3%','몬스터 방어율 무시 : +15%'],
+            52632 : ['STR : +12','DEX : +12','INT : +12','LUK : +12','공격력 : +12','마력 : +12','STR : +3%','DEX : +3%','INT : +3%','LUK : +3%','올스탯 : +5'],
+            105264 : ['최대 HP : +120','최대 MP : +120','공격 시 3% 확률로 32의 HP 회복','공격 시 3% 확률로 32의 MP 회복','공격 시 10% 확률로 6레벨 중독효과 적용','공격 시 5% 확률로 2레벨 기절효과 적용','공격 시 10% 확률로 2레벨 슬로우효과 적용','공격 시 10% 확률로 3레벨 암흑효과 적용','공격 시 5% 확률로 2레벨 빙결효과 적용','격 시 5% 확률로 2레벨 봉인효과 적용']
+        },
+        'second' : {
+            18 : ['공격력 : +3%	','마력 : +3%','크리티컬 확률 : +4%','데미지 : +3%','몬스터 방어율 무시 : +15%'],
+            53 : ['STR : +12','DEX : +12','INT : +12','LUK : +12','공격력 : +12','마력 : +12','STR : +3%','DEX : +3%','INT : +3%','LUK : +3%','올스탯 : +5'],
+            106 : ['최대 HP : +120','최대 MP : +120','공격 시 3% 확률로 32의 HP 회복','공격 시 3% 확률로 32의 MP 회복','공격 시 10% 확률로 6레벨 중독효과 적용','공격 시 5% 확률로 2레벨 기절효과 적용','공격 시 10% 확률로 2레벨 슬로우효과 적용','공격 시 10% 확률로 3레벨 암흑효과 적용','공격 시 5% 확률로 2레벨 빙결효과 적용','공격 시 5% 확률로 2레벨 봉인효과 적용'],
+            62544 : ['공격력 : +6','마력 : +6'],
+            187419 : ['STR : +6','DEX : +6','INT : +6','LUK : +6'],
+            374732 : ['최대 HP : +60','최대 MP : +60']
+        },
+        'third' : {
+            18 : ['공격력 : +3%	','마력 : +3%','크리티컬 확률 : +4%','데미지 : +3%','몬스터 방어율 무시 : +15%'],
+            53 : ['STR : +12','DEX : +12','INT : +12','LUK : +12','공격력 : +12','마력 : +12','STR : +3%','DEX : +3%','INT : +3%','LUK : +3%','올스탯 : +5'],
+            106 : ['최대 HP : +120','최대 MP : +120','공격 시 3% 확률로 32의 HP 회복','공격 시 3% 확률로 32의 MP 회복','공격 시 10% 확률로 6레벨 중독효과 적용','공격 시 5% 확률로 2레벨 기절효과 적용','공격 시 10% 확률로 2레벨 슬로우효과 적용','공격 시 10% 확률로 3레벨 암흑효과 적용','공격 시 5% 확률로 2레벨 빙결효과 적용','공격 시 5% 확률로 2레벨 봉인효과 적용'],
+            62544 : ['공격력 : +6','마력 : +6'],
+            187419 : ['STR : +6','DEX : +6','INT : +6','LUK : +6'],
+            374732 : ['최대 HP : +60','최대 MP : +60']
+        }
+    },
+    '에픽' : {
+        'first':{
+            
+        },
+        'second':{
+    
+        },
+        'third':{
+    
+        }
+    }
+}
+
+
 #실행 확인
 @client.event
 async def on_ready():
@@ -114,9 +153,9 @@ class party:
     def set_data(self, uid, om):
         self.msg_dic[uid] = om 
 
-@tasks.loop(minutes=30)
+@tasks.loop(seconds=60)
 async def stock_loop():
-    if datetime.now().hour == 23 and datetime.now().minute >= 30:
+    if datetime.now().hour == 23 and datetime.now().minute == 30:
         conn_lt_init = pymysql.connect(
         user = 'jonsu0129',
         password = passwd_token,
@@ -132,8 +171,6 @@ async def stock_loop():
         conn_lt_init.close()
         await client.get_channel(792887565589282827).send(f'복권이 3개로 초기화됐습니다.')
 
-@tasks.loop(seconds=60)
-async def stock_loop():
     if datetime.now().minute == 30 or datetime.now().minute == 0:
         gypkr_rand = random.triangular(-30,30,0.2)
         gypkr_rand = random.triangular(gypkr_rand,-gypkr_rand,0.2)
@@ -187,6 +224,175 @@ async def stock_loop():
 async def on_message(message):
     if message.author == client.user:
         return
+    
+    if message.content.startswith('강화명령어!'):
+        weapon_help = discord.Embed(title=f"강화명령어!", color=0x62c1cc)
+        weapon_help.add_field(name = "※이용방법※", value = f'무기등록 후 알맞은 명령어를 입력하세요', inline = False)
+        weapon_help.add_field(name = "🔴무기등록! 무기종류 무기이름", value = f'무기를 등록합니다. 무기종류: 한손검 (추가예정)', inline = False)
+        weapon_help.add_field(name = "🟡무기이름변경! 무기이름", value = f'유저의 무기의 이름을 (무기이름)으로 변경합니다.', inline = False)
+        weapon_help.add_field(name = "🟢무기정보! 무기이름", value = f'(무기이름)을 가진 무기의 정보를 보여줍니다.', inline = False)
+        weapon_help.add_field(name = "🔵무기잠재! 큐브이름", value = f'(큐브이름)으로 무기의 잠재능력 옵션을 재설정합니다. (큐브 종류: 수상한큐브) ※beta', inline = False)
+        await message.channel.send(embed=weapon_help)
+
+    if message.content.startswith('무기등록! '):
+        weapon_type = message.content.split()[1]
+        weapon_name = message.content.split()[2]
+        
+        conn_weapon = pymysql.connect(
+            user = 'jonsu0129',
+            password = 'rlawnstn!23',
+            host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+            db = 'testDB',
+            charset = 'utf8'
+        )
+
+        cur_weapon_exist_samename = conn_weapon.cursor()
+        cur_weapon_exist_samename_sql = "select * from testDB.weaponTable where weapon_name = %s"
+
+        cur_weapon_exist_samename.execute(cur_weapon_exist_samename_sql,{weapon_name})
+        cur_weapon_exist_samename = cur_weapon_exist_samename.fetchall()
+        print(f'{cur_weapon_exist_samename}')
+        
+        if cur_weapon_exist_samename != ():
+            await message.channel.send(f'<@{message.author.id}> 같은 이름의 무기가 존재합니다. ({weapon_name})')
+        else:
+            cur_weapon_exist = conn_weapon.cursor()
+            cur_weapon_exist_sql = "select * from testDB.weaponTable where userId = %s"
+            cur_weapon_exist.execute(cur_weapon_exist_sql,message.author.id)
+            cur_weapon_exist = cur_weapon_exist.fetchall()
+            # print(f'{cur_weapon_exist}')
+            if cur_weapon_exist == ():
+                if weapon_type == "한손검":
+                    cur_weapon = conn_weapon.cursor()
+                    cur_weapon.execute(f"insert into weaponTable VALUES('{weapon_name}','{weapon_type}',150,150,0,0,0,0,326,0,30,20,0,레어,0,0,0,{message.author.id})")
+
+                    cur_weapon_sql = "update `testDB`.`userTable` set weapon_name = %s where userId = %s"
+                    cur_weapon.execute(cur_weapon_sql, ({weapon_name}, {message.author.id}))
+                    conn_weapon.commit()
+                    conn_weapon.close()
+                    await message.channel.send(f'<@{message.author.id}>님이 {weapon_name}({weapon_type})(을)를 등록하였습니다. (무기정보! 무기이름)')
+            else:
+                await message.channel.send(f'<@{message.author.id}>님은 이미 무기가 존재합니다! 무기 이름: {cur_weapon_exist[0][0]}')
+
+    if message.content.startswith('무기이름변경! '):
+        weapon_name_new = message.content.split()[1]
+        conn_weapon_change = pymysql.connect(
+            user = 'jonsu0129',
+            password = 'rlawnstn!23',
+            host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+            db = 'testDB',
+            charset = 'utf8'
+        )
+        cur_weapon_change_exist_samename = conn_weapon_change.cursor()
+        cur_weapon_change_exist_samename_sql = "select * from testDB.weaponTable where weapon_name = %s"
+
+        cur_weapon_change_exist_samename.execute(cur_weapon_change_exist_samename_sql,{weapon_name_new})
+        cur_weapon_change_exist_samename = cur_weapon_change_exist_samename.fetchall()
+
+        if cur_weapon_change_exist_samename != ():
+            await message.channel.send(f'<@{message.author.id}> 같은 이름의 무기가 존재합니다. ({weapon_name_new})')
+        else:
+            cur_weapon_change = conn_weapon_change.cursor()
+            sql_weapon_change_1 = "update `testDB`.`userTable` set weapon_name = %s where userId = %s"
+            sql_weapon_change_2 = "update `testDB`.`weaponTable` set weapon_name = %s where userId = %s"
+            cur_weapon_change.execute(sql_weapon_change_1,({weapon_name_new},{message.author.id}))
+
+            cur_weapon_change.execute(sql_weapon_change_2,({weapon_name_new},{message.author.id}))
+            await message.channel.send(f'<@{message.author.id}>님이 {weapon_name_new}로 무기 이름을 변경하였습니다.')
+            conn_weapon_change.commit()
+            conn_weapon_change.close()
+
+    if message.content.startswith('무기정보! '):
+        info_weapon_name = message.content.split()[1]
+        conn_weapon_info = pymysql.connect(
+            user = 'jonsu0129',
+            password = 'rlawnstn!23',
+            host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+            db = 'testDB',
+            charset = 'utf8'
+        )
+        cur_weapon_info = conn_weapon_info.cursor()
+        sql_weapon_info = 'select * from weaponTable where weapon_name = %s'
+        cur_weapon_info.execute(sql_weapon_info, {info_weapon_name})
+        cur_weapon_info = cur_weapon_info.fetchall()
+
+        if cur_weapon_info == ():
+            await message.channel.send(f'<@{message.author.id}> 무기가 존재하지 않습니다. ({info_weapon_name})')
+        else:
+            cur_weapon_info_user = conn_weapon_info.cursor()
+            sql_weapon_info_user = 'select userName from userTable where weapon_name = %s'
+            cur_weapon_info_user.execute(sql_weapon_info_user,{info_weapon_name})
+            cur_weapon_info_user = cur_weapon_info_user.fetchall()[0][0]
+            weapon_info_list = ["무기 종류", "STR", "DEX", "INT", "LUK","최대 HP", "최대 MP", "공격력", "마력", "보스 몬스터 공격 시 데미지", "몬스터 방어율 무시", "올스탯", "잠재등급", "잠재옵션1","잠재옵션2","잠재옵션3"]
+            weapon_info = discord.Embed(title=f"{cur_weapon_info_user}의 {cur_weapon_info[0][0]}", color=0x62c1cc)
+            for i in range(0,16):
+                if cur_weapon_info[0][i+1] == 0 or cur_weapon_info[0][i+1] == "0":
+                    pass
+                else:
+                    if i == 9 or i == 10 or i == 11:
+                        weapon_info.add_field(name = f"{weapon_info_list[i]}", value = f'{cur_weapon_info[0][i+1]}%', inline = True)
+                    elif i == 13 or i == 14 or i== 15:
+                        weapon_info.add_field(name = f"{weapon_info_list[i]}", value = f'{cur_weapon_info[0][i+1]}', inline = False)
+                    else:
+                        weapon_info.add_field(name = f"{weapon_info_list[i]}", value = f'{cur_weapon_info[0][i+1]}', inline = True)
+            await message.channel.send(embed=weapon_info)
+            
+    if message.content.startswith('무기잠재! '):
+        cube = message.content.split()[1]
+        if(cube == "수상한큐브"):
+            conn_cube_susang = pymysql.connect(
+            user = 'jonsu0129',
+            password = 'rlawnstn!23',
+            host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+            db = 'testDB',
+            charset = 'utf8'
+            )
+            cur_cube_susang = conn_cube_susang.cursor()
+            sql_cube_susang = "select 잠재등급 from weaponTable where userId = %s"
+
+            cur_cube_susang.execute(sql_cube_susang, {message.author.id})
+            cur_cube_susang = cur_cube_susang.fetchall()[0][0]
+            if(cur_cube_susang == "유니크" or cur_cube_susang == "레전더리"):
+                await message.channel.send(f"<@{message.author.id}> 에픽 등급 이하의 장비에만 사용할 수 있습니다. 현재 등급: {cur_cube_susang}")
+            elif(cur_cube_susang == "레어"):
+                r1 = random.randint(0, 105265)
+                r2 = random.randint(0, 374733)
+                r3 = random.randint(0,374733)
+                print(f'{r1}, {r2}, {r3}')
+                if(r1 <= 17544): r1 = 17544
+                elif(r1 <= 52632): r1= 52632
+                elif(r1<= 105264): r1 = 105264
+                if(r2 <= 18) : r2 =18
+                elif(r2 <= 53) : r2 =53
+                elif(r2 <= 106) : r2 = 106
+                elif(r2 <= 62544) : r2 = 62544
+                elif(r2 <= 187419) : r2 = 187419
+                elif(r2 <= 374732) : r2 = 374732
+                if(r3 <= 18) : r3 =18
+                elif(r3 <= 53) : r3 =53
+                elif(r3 <= 106) : r3 = 106
+                elif(r3 <= 62544) : r3 = 62544
+                elif(r3 <= 187419) : r3 = 187419
+                elif(r3 <= 374732) : r3 = 374732
+                susang_rare_1 = random.choice(cube_susang_prob[f'{cur_cube_susang}']['first'][r1])
+                susang_rare_2 = random.choice(cube_susang_prob[f'{cur_cube_susang}']['second'][r2])
+                susang_rare_3 = random.choice(cube_susang_prob[f'{cur_cube_susang}']['third'][r3])
+                # print(f'{susang_rare_1}, {susang_rare_2}, {susang_rare_3}')
+                cur_cube_susang_rare = conn_cube_susang.cursor()
+                sql_cube_susang_rare = "update `testDB`.`weaponTable` set 잠재옵션1 = %s, 잠재옵션2 = %s, 잠재옵션3 = %s where userId = %s"
+
+                cur_cube_susang_rare.execute(sql_cube_susang_rare, ({susang_rare_1},{susang_rare_2},{susang_rare_3},{message.author.id}))
+                
+                await message.channel.send(f'잠재능력 옵션이 변경되었습니다. \n등급: {cur_cube_susang}\n잠재옵션1: {susang_rare_1}\n잠재옵션2: {susang_rare_2}\n잠재옵션3: {susang_rare_3}')
+
+                conn_cube_susang.commit()
+                conn_cube_susang.close()
+                
+        elif(cube == "장인의큐브"):
+            pass
+
+
+
 
     if message.content.startswith('송금!'):
         wire_data = message.content.split()
