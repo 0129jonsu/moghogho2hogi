@@ -232,6 +232,7 @@ async def on_message(message):
         weapon_help.add_field(name = "🟡무기이름변경! 무기이름", value = f'유저의 무기의 이름을 (무기이름)으로 변경합니다.', inline = False)
         weapon_help.add_field(name = "🟢무기정보! 무기이름", value = f'(무기이름)을 가진 무기의 정보를 보여줍니다.', inline = False)
         weapon_help.add_field(name = "🔵무기잠재! 큐브이름", value = f'(큐브이름)으로 무기의 잠재능력 옵션을 재설정합니다. (큐브 종류: 수상한큐브) ※beta', inline = False)
+        weapon_help.add_field(name = "🔵무기강화!", value = f'무기를 강화합니다. (확률은 메이플스토리 스타포스 강화 확률과 같습니다.) ※beta', inline = False)
         await message.channel.send(embed=weapon_help)
 
     if message.content.startswith('무기등록! '):
@@ -240,7 +241,7 @@ async def on_message(message):
         
         conn_weapon = pymysql.connect(
             user = 'jonsu0129',
-            password = 'rlawnstn!23',
+            password = passwd_token,
             host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
             db = 'testDB',
             charset = 'utf8'
@@ -264,7 +265,7 @@ async def on_message(message):
             if cur_weapon_exist == ():
                 if weapon_type == "한손검":
                     cur_weapon = conn_weapon.cursor()
-                    cur_weapon.execute(f"insert into weaponTable VALUES('{weapon_name}','{weapon_type}',150,150,0,0,0,0,326,0,30,20,0,레어,0,0,0,{message.author.id})")
+                    cur_weapon.execute(f"insert into weaponTable VALUES('{weapon_name}','{weapon_type}',150,150,0,0,0,0,326,0,30,20,0,레어,0,0,0,0,{message.author.id})")
 
                     cur_weapon_sql = "update `testDB`.`userTable` set weapon_name = %s where userId = %s"
                     cur_weapon.execute(cur_weapon_sql, ({weapon_name}, {message.author.id}))
@@ -278,7 +279,7 @@ async def on_message(message):
         weapon_name_new = message.content.split()[1]
         conn_weapon_change = pymysql.connect(
             user = 'jonsu0129',
-            password = 'rlawnstn!23',
+            password = passwd_token,
             host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
             db = 'testDB',
             charset = 'utf8'
@@ -306,7 +307,7 @@ async def on_message(message):
         info_weapon_name = message.content.split()[1]
         conn_weapon_info = pymysql.connect(
             user = 'jonsu0129',
-            password = 'rlawnstn!23',
+            password = passwd_token,
             host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
             db = 'testDB',
             charset = 'utf8'
@@ -324,7 +325,25 @@ async def on_message(message):
             cur_weapon_info_user.execute(sql_weapon_info_user,{info_weapon_name})
             cur_weapon_info_user = cur_weapon_info_user.fetchall()[0][0]
             weapon_info_list = ["무기 종류", "STR", "DEX", "INT", "LUK","최대 HP", "최대 MP", "공격력", "마력", "보스 몬스터 공격 시 데미지", "몬스터 방어율 무시", "올스탯", "잠재등급", "잠재옵션1","잠재옵션2","잠재옵션3"]
-            weapon_info = discord.Embed(title=f"{cur_weapon_info_user}의 {cur_weapon_info[0][0]}", color=0x62c1cc)
+            weapon_info_star = ""
+            for i in range(1, cur_weapon_info[0][17]+1):
+                weapon_info_star += "★"
+                if i%5 == 0:
+                    weapon_info_star += "   "
+                if i % 15 == 0:
+                    weapon_info_star += "\n"
+                    for j in range(0,13):
+                        weapon_info_star += " "
+            for i in range(cur_weapon_info[0][17]+1, 26):
+                weapon_info_star += "☆"
+                if i%5 == 0:
+                    weapon_info_star += "   "
+                if i % 15 == 0:
+                    weapon_info_star += "\n"
+                    for j in range(0,13):
+                        weapon_info_star += " "
+
+            weapon_info = discord.Embed(title=f"{weapon_info_star}\n{cur_weapon_info_user}의 {cur_weapon_info[0][0]}", color=0x62c1cc)
             for i in range(0,16):
                 if cur_weapon_info[0][i+1] == 0 or cur_weapon_info[0][i+1] == "0":
                     pass
@@ -342,7 +361,7 @@ async def on_message(message):
         if(cube == "수상한큐브"):
             conn_cube_susang = pymysql.connect(
             user = 'jonsu0129',
-            password = 'rlawnstn!23',
+            password = passwd_token,
             host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
             db = 'testDB',
             charset = 'utf8'
@@ -390,6 +409,260 @@ async def on_message(message):
                 
         elif(cube == "장인의큐브"):
             pass
+
+    if message.content.startswith('무기강화!'):
+        # L = 40
+        # for i in range(0,25):
+        #     S = i
+        #     starforce_price = 0
+        #     if i <= 2:
+        #         starforce_price = 1000 + (pow(L,3) * (S + 1)) / 25
+        #     elif i <= 9:
+        #         starforce_price = 1000 + (pow(L,3) * (S + 1)) / 25
+        #     elif i == 10:
+        #         starforce_price = 1000 + (pow(L,3) * pow((S + 1),2.7)) / 400
+        #     elif i == 11:
+        #         starforce_price = 1000 + (pow(L,3) * pow((S + 1),2.7)) / 400
+        #     elif i == 12:
+        #         starforce_price = 1000 + (pow(L,3) * pow((S + 1),2.7)) / 400
+        #     elif i == 13:
+        #         starforce_price = 1000 + (pow(L,3) * pow((S + 1),2.7)) / 400
+        #     elif i == 14:
+        #         starforce_price = 1000 + (pow(L,3) * pow((S + 1),2.7)) / 400
+        #     elif i <= 17:
+        #         starforce_price = 1000 + (pow(L,3) * pow((S + 1),2.7)) / 200
+        #     elif i <= 19:
+        #         starforce_price = 1000 + (pow(L,3) * pow((S + 1),2.7)) / 200
+        #     elif i <= 21:
+        #         starforce_price = 1000 + (pow(L,3) * pow((S + 1),2.7))/ 200
+        #     elif i == 22:
+        #         starforce_price = 1000 + (pow(L,3) * pow((S + 1),2.7)) / 200
+        #     elif i == 23:
+        #         starforce_price = 1000 + (pow(L,3) * pow((S + 1),2.7)) / 200
+        #     elif i == 24:
+        #         starforce_price = 1000 + (pow(L,3) * pow((S + 1),2.7)) / 200
+        #     starforce_price = round(starforce_price)
+        #     print(f'{i}: {starforce_price}')
+            
+        conn_cube_starforce = pymysql.connect(
+        user = 'jonsu0129',
+        password = passwd_token,
+        host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+        db = 'testDB',
+        charset = 'utf8'
+        )
+        cur_starforce = conn_cube_starforce.cursor()
+        sql_starforce = "select 스타포스 from weaponTable where userId = %s"
+
+        cur_starforce.execute(sql_starforce, {message.author.id})
+        cur_starforce = cur_starforce.fetchall()[0][0]
+
+        L = 40
+        starforce_price = 0
+        starforce_prob = 0
+        starforce_num = random.randint(1,1001)
+        await message.channel.send(f'<@{message.author.id}>')
+        if cur_starforce <= 2:
+            starforce_price = 1000 + (pow(L,3) * (cur_starforce + 1)) / 25
+            starforce_prob = (95 - 5 * cur_starforce) * 10
+            if starforce_num <= starforce_prob:
+                cur_starforce_wl = conn_cube_starforce.cursor()
+                sql_starforce_wl = "UPDATE `testDB`.`weaponTable` SET 스타포스 = %s WHERE userId = %s;"
+                cur_starforce_wl.execute(sql_starforce_wl, ({cur_starforce+1},{message.author.id}))
+                await message.channel.send(f'스타포스 강화를 성공하셨습니다. {cur_starforce+1}성(+1)')
+                conn_cube_starforce.commit()
+                conn_cube_starforce.close()
+            else:
+                await message.channel.send(f'스타포스 강화를 실패하셨습니다. {cur_starforce}성(유지)')
+
+        elif cur_starforce<= 9:
+            starforce_price = 1000 + (pow(L,3) * (cur_starforce + 1)) / 25
+            starforce_prob = (95 - 5 * cur_starforce) * 10
+            if starforce_num <= starforce_prob:
+                cur_starforce_wl = conn_cube_starforce.cursor()
+                sql_starforce_wl = "UPDATE `testDB`.`weaponTable` SET 스타포스 = %s WHERE userId = %s;"
+                cur_starforce_wl.execute(sql_starforce_wl, ({cur_starforce+1},{message.author.id}))
+                await message.channel.send(f'스타포스 강화를 성공하셨습니다. {cur_starforce+1}성(+1)')
+                conn_cube_starforce.commit()
+                conn_cube_starforce.close()
+            else:
+                await message.channel.send(f'스타포스 강화를 실패하셨습니다. {cur_starforce}성(유지)')
+
+        elif cur_starforce == 10:
+            starforce_price = 1000 + (pow(L,3) * pow((cur_starforce + 1),2.7)) / 400
+            starforce_prob = (100 - 5 * cur_starforce)*10
+            if starforce_num <= starforce_prob:
+                cur_starforce_wl = conn_cube_starforce.cursor()
+                sql_starforce_wl = "UPDATE `testDB`.`weaponTable` SET 스타포스 = %s WHERE userId = %s;"
+                cur_starforce_wl.execute(sql_starforce_wl, ({cur_starforce+1},{message.author.id}))
+                await message.channel.send(f'스타포스 강화를 성공하셨습니다. {cur_starforce+1}성(+1)')
+                conn_cube_starforce.commit()
+                conn_cube_starforce.close()
+            else:
+                await message.channel.send(f'스타포스 강화를 실패하셨습니다. {cur_starforce}성(유지)')
+
+        elif cur_starforce == 11:
+            starforce_price = 1000 + (pow(L,3) * pow((cur_starforce + 1),2.7)) / 400
+            starforce_prob = (100 - 5 * cur_starforce)*10
+            if starforce_num <= starforce_prob:
+                cur_starforce_wl = conn_cube_starforce.cursor()
+                sql_starforce_wl = "UPDATE `testDB`.`weaponTable` SET 스타포스 = %s WHERE userId = %s;"
+                cur_starforce_wl.execute(sql_starforce_wl, ({cur_starforce+1},{message.author.id}))
+                await message.channel.send(f'스타포스 강화를 성공하셨습니다. {cur_starforce+1}성(+1)')
+                conn_cube_starforce.commit()
+                conn_cube_starforce.close()
+            else:
+                await message.channel.send(f'스타포스 강화를 실패하셨습니다. {cur_starforce}성(유지)')
+
+        elif cur_starforce == 12:
+            starforce_price = 1000 + (pow(L,3) * pow((cur_starforce + 1),2.7)) / 400
+            starforce_prob = (100 - 5 * cur_starforce)*10
+            if starforce_num <= starforce_prob:
+                cur_starforce_wl = conn_cube_starforce.cursor()
+                sql_starforce_wl = "UPDATE `testDB`.`weaponTable` SET 스타포스 = %s WHERE userId = %s;"
+                cur_starforce_wl.execute(sql_starforce_wl, ({cur_starforce+1},{message.author.id}))
+                await message.channel.send(f'스타포스 강화를 성공하셨습니다. {cur_starforce+1}성(+1)')
+                conn_cube_starforce.commit()
+                conn_cube_starforce.close()
+            else:
+                await message.channel.send(f'스타포스 강화를 실패하셨습니다. {cur_starforce}성(유지)')
+
+        elif cur_starforce == 13:
+            starforce_price = 1000 + (pow(L,3) * pow((cur_starforce + 1),2.7)) / 400
+            starforce_prob = (100 - 5 * cur_starforce)*10
+            if starforce_num <= starforce_prob:
+                cur_starforce_wl = conn_cube_starforce.cursor()
+                sql_starforce_wl = "UPDATE `testDB`.`weaponTable` SET 스타포스 = %s WHERE userId = %s;"
+                cur_starforce_wl.execute(sql_starforce_wl, ({cur_starforce+1},{message.author.id}))
+                await message.channel.send(f'스타포스 강화를 성공하셨습니다. {cur_starforce+1}성(+1)')
+                conn_cube_starforce.commit()
+                conn_cube_starforce.close()
+            else:
+                await message.channel.send(f'스타포스 강화를 실패하셨습니다. {cur_starforce}성(유지)')
+
+        elif cur_starforce == 14:
+            starforce_price = 1000 + (pow(L,3) * pow((cur_starforce + 1),2.7)) / 400
+            starforce_prob = (100 - 5 * cur_starforce)*10
+            if starforce_num <= starforce_prob:
+                cur_starforce_wl = conn_cube_starforce.cursor()
+                sql_starforce_wl = "UPDATE `testDB`.`weaponTable` SET 스타포스 = %s WHERE userId = %s;"
+                cur_starforce_wl.execute(sql_starforce_wl, ({cur_starforce+1},{message.author.id}))
+                await message.channel.send(f'스타포스 강화를 성공하셨습니다. {cur_starforce+1}성(+1)')
+                conn_cube_starforce.commit()
+                conn_cube_starforce.close()
+            else:
+                await message.channel.send(f'스타포스 강화를 실패하셨습니다. {cur_starforce}성(유지)')
+
+        elif cur_starforce <= 17:
+            starforce_price = 1000 + (pow(L,3) * pow((cur_starforce + 1),2.7)) / 200
+            starforce_prob = 321
+            if starforce_num <= starforce_prob:
+                cur_starforce_wl = conn_cube_starforce.cursor()
+                sql_starforce_wl = "UPDATE `testDB`.`weaponTable` SET 스타포스 = %s WHERE userId = %s;"
+                cur_starforce_wl.execute(sql_starforce_wl, ({cur_starforce+1},{message.author.id}))
+                await message.channel.send(f'스타포스 강화를 성공하셨습니다. {cur_starforce+1}성(+1)')
+                conn_cube_starforce.commit()
+                conn_cube_starforce.close()
+            else:
+                cur_starforce_wl = conn_cube_starforce.cursor()
+                sql_starforce_wl = "UPDATE `testDB`.`weaponTable` SET 스타포스 = %s WHERE userId = %s;"
+                cur_starforce_wl.execute(sql_starforce_wl, ({cur_starforce-1},{message.author.id}))
+                await message.channel.send(f'스타포스 강화를 성공하셨습니다. {cur_starforce-1}성(-1)')
+                conn_cube_starforce.commit()
+                conn_cube_starforce.close()
+
+        elif cur_starforce <= 19:
+            starforce_price = 1000 + (pow(L,3) * pow((cur_starforce + 1),2.7)) / 200
+            starforce_prob = 328
+            if starforce_num <= starforce_prob:
+                cur_starforce_wl = conn_cube_starforce.cursor()
+                sql_starforce_wl = "UPDATE `testDB`.`weaponTable` SET 스타포스 = %s WHERE userId = %s;"
+                cur_starforce_wl.execute(sql_starforce_wl, ({cur_starforce+1},{message.author.id}))
+                await message.channel.send(f'스타포스 강화를 성공하셨습니다. {cur_starforce+1}성(+1)')
+                conn_cube_starforce.commit()
+                conn_cube_starforce.close()
+            else:
+                cur_starforce_wl = conn_cube_starforce.cursor()
+                sql_starforce_wl = "UPDATE `testDB`.`weaponTable` SET 스타포스 = %s WHERE userId = %s;"
+                cur_starforce_wl.execute(sql_starforce_wl, ({cur_starforce-1},{message.author.id}))
+                await message.channel.send(f'스타포스 강화를 성공하셨습니다. {cur_starforce-1}성(-1)')
+                conn_cube_starforce.commit()
+                conn_cube_starforce.close()
+
+        elif cur_starforce <= 21:
+            starforce_price = 1000 + (pow(L,3) * pow((cur_starforce + 1),2.7))/ 200
+            starforce_prob = 370
+            if starforce_num <= starforce_prob:
+                cur_starforce_wl = conn_cube_starforce.cursor()
+                sql_starforce_wl = "UPDATE `testDB`.`weaponTable` SET 스타포스 = %s WHERE userId = %s;"
+                cur_starforce_wl.execute(sql_starforce_wl, ({cur_starforce+1},{message.author.id}))
+                await message.channel.send(f'스타포스 강화를 성공하셨습니다. {cur_starforce+1}성(+1)')
+                conn_cube_starforce.commit()
+                conn_cube_starforce.close()
+            else:
+                cur_starforce_wl = conn_cube_starforce.cursor()
+                sql_starforce_wl = "UPDATE `testDB`.`weaponTable` SET 스타포스 = %s WHERE userId = %s;"
+                cur_starforce_wl.execute(sql_starforce_wl, ({cur_starforce-1},{message.author.id}))
+                await message.channel.send(f'스타포스 강화를 성공하셨습니다. {cur_starforce-1}성(-1)')
+                conn_cube_starforce.commit()
+                conn_cube_starforce.close()
+
+        elif cur_starforce == 22:
+            starforce_price = 1000 + (pow(L,3) * pow((cur_starforce + 1),2.7)) / 200
+            starforce_prob = 224
+            if starforce_num <= starforce_prob:
+                cur_starforce_wl = conn_cube_starforce.cursor()
+                sql_starforce_wl = "UPDATE `testDB`.`weaponTable` SET 스타포스 = %s WHERE userId = %s;"
+                cur_starforce_wl.execute(sql_starforce_wl, ({cur_starforce+1},{message.author.id}))
+                await message.channel.send(f'스타포스 강화를 성공하셨습니다. {cur_starforce+1}성(+1)')
+                conn_cube_starforce.commit()
+                conn_cube_starforce.close()
+            else:
+                cur_starforce_wl = conn_cube_starforce.cursor()
+                sql_starforce_wl = "UPDATE `testDB`.`weaponTable` SET 스타포스 = %s WHERE userId = %s;"
+                cur_starforce_wl.execute(sql_starforce_wl, ({cur_starforce-1},{message.author.id}))
+                await message.channel.send(f'스타포스 강화를 성공하셨습니다. {cur_starforce-1}성(-1)')
+                conn_cube_starforce.commit()
+                conn_cube_starforce.close()
+
+        elif cur_starforce == 23:
+            starforce_price = 1000 + (pow(L,3) * pow((cur_starforce + 1),2.7)) / 200
+            starforce_prob = 314
+            if starforce_num <= starforce_prob:
+                cur_starforce_wl = conn_cube_starforce.cursor()
+                sql_starforce_wl = "UPDATE `testDB`.`weaponTable` SET 스타포스 = %s WHERE userId = %s;"
+                cur_starforce_wl.execute(sql_starforce_wl, ({cur_starforce+1},{message.author.id}))
+                await message.channel.send(f'스타포스 강화를 성공하셨습니다. {cur_starforce+1}성(+1)')
+                conn_cube_starforce.commit()
+                conn_cube_starforce.close()
+            else:
+                cur_starforce_wl = conn_cube_starforce.cursor()
+                sql_starforce_wl = "UPDATE `testDB`.`weaponTable` SET 스타포스 = %s WHERE userId = %s;"
+                cur_starforce_wl.execute(sql_starforce_wl, ({cur_starforce-1},{message.author.id}))
+                await message.channel.send(f'스타포스 강화를 성공하셨습니다. {cur_starforce-1}성(-1)')
+                conn_cube_starforce.commit()
+                conn_cube_starforce.close()
+
+        elif cur_starforce == 24:
+            starforce_price = 1000 + (pow(L,3) * pow((cur_starforce + 1),2.7)) / 200
+            starforce_prob = 406
+            if starforce_num <= starforce_prob:
+                cur_starforce_wl = conn_cube_starforce.cursor()
+                sql_starforce_wl = "UPDATE `testDB`.`weaponTable` SET 스타포스 = %s WHERE userId = %s;"
+                cur_starforce_wl.execute(sql_starforce_wl, ({cur_starforce+1},{message.author.id}))
+                await message.channel.send(f'스타포스 강화를 성공하셨습니다. {cur_starforce+1}성(+1)')
+                conn_cube_starforce.commit()
+                conn_cube_starforce.close()
+            else:
+                cur_starforce_wl = conn_cube_starforce.cursor()
+                sql_starforce_wl = "UPDATE `testDB`.`weaponTable` SET 스타포스 = %s WHERE userId = %s;"
+                cur_starforce_wl.execute(sql_starforce_wl, ({cur_starforce-1},{message.author.id}))
+                await message.channel.send(f'스타포스 강화를 성공하셨습니다. {cur_starforce-1}성(-1)')
+                conn_cube_starforce.commit()
+                conn_cube_starforce.close()
+
+        starforce_price = round(starforce_price)
+
 
 
 
