@@ -860,12 +860,12 @@ async def on_message(message):
         userName = user_info[0][0]
         userMoney = user_info[0][2]
         user_lt = user_info[0][4]
+        user_weapon = user_info[0][7]
         
         gamble_info = discord.Embed(title=f"{userName}", color=0x62c1cc)
         gamble_info.add_field(name = "보유 골드", value = f'{userMoney}G', inline = False)
         gamble_info.add_field(name = "보유 티켓", value = f'{user_lt}개', inline = False)
-        gamble_info.add_field(name = "(주)개양파코리아", value = f'{user_info[0][5]}주', inline = False)
-        gamble_info.add_field(name = "(주)단밤바이오", value = f'{user_info[0][6]}주', inline = False)
+        gamble_info.add_field(name = "보유 무기", value = f'{user_weapon}', inline = False)
         await message.channel.send(embed=gamble_info)
 
         conn_info.close()
