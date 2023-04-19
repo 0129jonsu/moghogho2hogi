@@ -815,7 +815,7 @@ async def on_message(message):
         if chch == 1:
             await message.channel.send(f'<@{message.author.id}>이미 존재하는 id입니다.')
         else:
-            cur.execute(f"INSERT INTO userTable VALUES('{message.author}','{message.author.id}',10000, NULL, 3, 0, 0)")
+            cur.execute(f"INSERT INTO userTable VALUES('{message.author}','{message.author.id}',10000, NULL, 3, 0, 0, NULL)")
             await message.channel.send(f'<@{message.author.id}>등록되었습니다.(+10000G)')
             conn.commit()
             conn.close()
