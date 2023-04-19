@@ -265,7 +265,7 @@ async def on_message(message):
             if cur_weapon_exist == ():
                 if weapon_type == "한손검":
                     cur_weapon = conn_weapon.cursor()
-                    cur_weapon.execute(f"insert into weaponTable VALUES('{weapon_name}','{weapon_type}',150,150,0,0,0,0,326,0,30,20,0,레어,0,0,0,0,{message.author.id})")
+                    cur_weapon.execute(f"insert into weaponTable VALUES('{weapon_name}','{weapon_type}',150,150,0,0,0,0,326,0,30,20,0,'레어',0,0,0,0,{message.author.id})")
 
                     cur_weapon_sql = "update `testDB`.`userTable` set weapon_name = %s where userId = %s"
                     cur_weapon.execute(cur_weapon_sql, ({weapon_name}, {message.author.id}))
