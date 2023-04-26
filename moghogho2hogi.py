@@ -663,9 +663,11 @@ async def on_message(message):
 
         starforce_price = round(starforce_price)
 
-
-
-
+    if message.content.startswith('골라! '):
+        sel_list = message.content.split()
+        sel_list.remove('골라!')
+        sel_one = random.choice(sel_list)
+        await message.channel.send(f"2hogi's pick : ★{sel_one}★")
 
     if message.content.startswith('송금!'):
         wire_data = message.content.split()
