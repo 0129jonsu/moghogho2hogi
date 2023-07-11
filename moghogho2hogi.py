@@ -170,55 +170,6 @@ async def stock_loop():
         conn_lt_init.commit()
         conn_lt_init.close()
         await client.get_channel(792887565589282827).send(f'복권이 3개로 초기화됐습니다.')
-
-    if datetime.now().minute == 30 or datetime.now().minute == 0:
-        gypkr_rand = random.triangular(-30,30,0.2)
-        gypkr_rand = random.triangular(gypkr_rand,-gypkr_rand,0.2)
-
-        dbbio_rand = random.triangular(-50,100,0.2)
-        dbbio_rand = random.triangular(dbbio_rand,-dbbio_rand,0.2)
-        
-        global last_gypkr_rand
-        global last_dbbio_rand
-        
-        last_gypkr_rand = gypkr_rand
-        last_dbbio_rand = dbbio_rand
-
-        conn_stock = pymysql.connect(
-            user = 'jonsu0129',
-            password = passwd_token,
-            host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
-            db = 'testDB',
-            charset = 'utf8'
-        )
-
-        cur_gypkr_now = conn_stock.cursor()
-        cur_gypkr_update = conn_stock.cursor()
-        cur_dbbio_now = conn_stock.cursor()
-        cur_dbbio_update = conn_stock.cursor()
-
-        sql_stock_price = "SELECT * FROM testDB.discordStock WHERE stockName = %(stockName)s"
-        sql_stock_update = "UPDATE testDB.discordStock SET stockPrice = %s WHERE stockName = %s"
-
-        gypkr_price = cur_gypkr_now.execute(sql_stock_price, {"stockName" : {'(주)개양파코리아'}})
-        dbbio_price = cur_dbbio_now.execute(sql_stock_price, {"stockName" : {'(주)단밤바이오'}})
-        gypkr_price = cur_gypkr_now.fetchall()[0][1]
-        dbbio_price = cur_dbbio_now.fetchall()[0][1]
-
-        print(f'gypkr_price : {gypkr_price}, dbbio_price : {dbbio_price}')
-        gypkr_price += round(gypkr_price * gypkr_rand / 100)
-        dbbio_price += round(dbbio_price * dbbio_rand / 100)
-
-        cur_gypkr_update.execute(sql_stock_update, (gypkr_price,'(주)개양파코리아'))
-        cur_dbbio_update.execute(sql_stock_update, (dbbio_price,'(주)단밤바이오'))
-        
-        conn_stock.commit()
-        conn_stock.close()
-
-        stock = discord.Embed(title=f"현재 주가 {time.strftime('%Y.%m.%d - %H:%M:%S')}", color=0x62c1cc)
-        stock.add_field(name = "(주)개양파코리아", value = f'{gypkr_price}({round(gypkr_rand,2)}%)',inline = False)
-        stock.add_field(name = "(주)단밤바이오", value = f'{dbbio_price}({round(dbbio_rand,2)}%)',inline = False)
-        await client.get_channel(792887565589282827).send(embed=stock)
         
 @client.event
 async def on_message(message):
