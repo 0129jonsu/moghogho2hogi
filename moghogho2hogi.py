@@ -159,7 +159,7 @@ async def stock_loop():
         conn_lt_init = pymysql.connect(
         user = 'jonsu0129',
         password = passwd_token,
-        host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+        host = 'discord-database-kr.cqops5vysvnr.ap-northeast-2.rds.amazonaws.com',
         db = 'testDB',
         charset = 'utf8'
         )
@@ -193,7 +193,7 @@ async def on_message(message):
         conn_weapon = pymysql.connect(
             user = 'jonsu0129',
             password = passwd_token,
-            host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+            host = 'discord-database-kr.cqops5vysvnr.ap-northeast-2.rds.amazonaws.com',
             db = 'testDB',
             charset = 'utf8'
         )
@@ -231,7 +231,7 @@ async def on_message(message):
         conn_weapon_change = pymysql.connect(
             user = 'jonsu0129',
             password = passwd_token,
-            host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+            host = 'discord-database-kr.cqops5vysvnr.ap-northeast-2.rds.amazonaws.com',
             db = 'testDB',
             charset = 'utf8'
         )
@@ -259,7 +259,7 @@ async def on_message(message):
         conn_weapon_info = pymysql.connect(
             user = 'jonsu0129',
             password = passwd_token,
-            host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+            host = 'discord-database-kr.cqops5vysvnr.ap-northeast-2.rds.amazonaws.com',
             db = 'testDB',
             charset = 'utf8'
         )
@@ -313,7 +313,7 @@ async def on_message(message):
             conn_cube_susang = pymysql.connect(
             user = 'jonsu0129',
             password = passwd_token,
-            host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+            host = 'discord-database-kr.cqops5vysvnr.ap-northeast-2.rds.amazonaws.com',
             db = 'testDB',
             charset = 'utf8'
             )
@@ -398,7 +398,7 @@ async def on_message(message):
         conn_cube_starforce = pymysql.connect(
         user = 'jonsu0129',
         password = passwd_token,
-        host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+        host = 'discord-database-kr.cqops5vysvnr.ap-northeast-2.rds.amazonaws.com',
         db = 'testDB',
         charset = 'utf8'
         )
@@ -630,7 +630,7 @@ async def on_message(message):
         conn_wire = pymysql.connect(
             user = 'jonsu0129',
             password = passwd_token,
-            host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+            host = 'discord-database-kr.cqops5vysvnr.ap-northeast-2.rds.amazonaws.com',
             db = 'testDB',
             charset = 'utf8'
         )
@@ -675,7 +675,7 @@ async def on_message(message):
             conn_add_lt = pymysql.connect(
             user = 'jonsu0129',
             password = passwd_token,
-            host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+            host = 'discord-database-kr.cqops5vysvnr.ap-northeast-2.rds.amazonaws.com',
             db = 'testDB',
             charset = 'utf8'
             )
@@ -695,7 +695,7 @@ async def on_message(message):
             conn_lt_init = pymysql.connect(
             user = 'jonsu0129',
             password = passwd_token,
-            host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+            host = 'discord-database-kr.cqops5vysvnr.ap-northeast-2.rds.amazonaws.com',
             db = 'testDB',
             charset = 'utf8'
             )
@@ -754,7 +754,7 @@ async def on_message(message):
         conn = pymysql.connect(
             user = 'jonsu0129',
             password = passwd_token,
-            host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+            host = 'discord-database-kr.cqops5vysvnr.ap-northeast-2.rds.amazonaws.com',
             db = 'testDB',
             charset = 'utf8'
         )
@@ -777,7 +777,7 @@ async def on_message(message):
         conn_del = pymysql.connect(
             user = 'jonsu0129',
             password = passwd_token,
-            host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+            host = 'discord-database-kr.cqops5vysvnr.ap-northeast-2.rds.amazonaws.com',
             db = 'testDB',
             charset = 'utf8'
         )
@@ -801,7 +801,7 @@ async def on_message(message):
         conn_info = pymysql.connect(
         user = 'jonsu0129',
         password = passwd_token,
-        host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+        host = 'discord-database-kr.cqops5vysvnr.ap-northeast-2.rds.amazonaws.com',
         db = 'testDB',
         charset = 'utf8'
         )
@@ -827,7 +827,7 @@ async def on_message(message):
         conn_stock_buy = pymysql.connect(
             user = 'jonsu0129',
             password = passwd_token,
-            host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+            host = 'discord-database-kr.cqops5vysvnr.ap-northeast-2.rds.amazonaws.com',
             db = 'testDB',
             charset = 'utf8'
         )
@@ -870,7 +870,7 @@ async def on_message(message):
         conn_stock_sell = pymysql.connect(
             user = 'jonsu0129',
             password = passwd_token,
-            host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+            host = 'discord-database-kr.cqops5vysvnr.ap-northeast-2.rds.amazonaws.com',
             db = 'testDB',
             charset = 'utf8'
         )
@@ -911,7 +911,7 @@ async def on_message(message):
         conn_stock = pymysql.connect(
             user = 'jonsu0129',
             password = passwd_token,
-            host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+            host = 'discord-database-kr.cqops5vysvnr.ap-northeast-2.rds.amazonaws.com',
             db = 'testDB',
             charset = 'utf8'
         )
@@ -931,7 +931,7 @@ async def on_message(message):
         conn_roulette = pymysql.connect(
             user = 'jonsu0129',
             password = passwd_token,
-            host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+            host = 'discord-database-kr.cqops5vysvnr.ap-northeast-2.rds.amazonaws.com',
             db = 'testDB',
             charset = 'utf8'
         )
@@ -997,7 +997,7 @@ async def on_message(message):
         conn_lotto = pymysql.connect(
         user = 'jonsu0129',
         password = passwd_token,
-        host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+        host = 'discord-database-kr.cqops5vysvnr.ap-northeast-2.rds.amazonaws.com',
         db = 'testDB',
         charset = 'utf8'
         )
@@ -1060,7 +1060,7 @@ async def on_message(message):
         conn_lsp = pymysql.connect(
             user = 'jonsu0129',
             password = passwd_token,
-            host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+            host = 'discord-database-kr.cqops5vysvnr.ap-northeast-2.rds.amazonaws.com',
             db = 'testDB',
             charset = 'utf8'
         )
@@ -1128,7 +1128,7 @@ async def on_message(message):
         conn_rank = pymysql.connect(
             user = 'jonsu0129',
             password = passwd_token,
-            host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+            host = 'discord-database-kr.cqops5vysvnr.ap-northeast-2.rds.amazonaws.com',
             db = 'testDB',
             charset = 'utf8'
         )
@@ -1169,7 +1169,7 @@ async def on_message(message):
         conn_gu = pymysql.connect(
             user = 'jonsu0129',
             password = passwd_token,
-            host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+            host = 'discord-database-kr.cqops5vysvnr.ap-northeast-2.rds.amazonaws.com',
             db = 'testDB',
             charset = 'utf8'
             )
@@ -1346,7 +1346,7 @@ async def on_message(message):
         conn_mm = pymysql.connect(
         user = 'jonsu0129',
         password = passwd_token,
-        host = 'discord-database-kr.cmagpshmnsos.ap-northeast-2.rds.amazonaws.com',
+        host = 'discord-database-kr.cqops5vysvnr.ap-northeast-2.rds.amazonaws.com',
         db = 'testDB',
         charset = 'utf8'
         )
