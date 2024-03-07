@@ -153,24 +153,25 @@ class party:
     def set_data(self, uid, om):
         self.msg_dic[uid] = om 
 
-@tasks.loop(seconds=60)
-async def stock_loop():
-    if datetime.now().hour == 23 and datetime.now().minute == 30:
-        conn_lt_init = pymysql.connect(
-        user = 'jonsu0129',
-        password = passwd_token,
-        host = 'discord-database-kr.cqops5vysvnr.ap-northeast-2.rds.amazonaws.com',
-        db = 'testDB',
-        charset = 'utf8'
-        )
-        cur_lt_init = conn_lt_init.cursor()
-        sql_lt_init = "update userTable set ltcount = 3"
-            
-        cur_lt_init.execute(sql_lt_init)
-        conn_lt_init.commit()
-        conn_lt_init.close()
-        await client.get_channel(792887565589282827).send(f'복권이 3개로 초기화됐습니다.')
-        
+#@tasks.loop(seconds=60)
+#async def stock_loop():
+#    if datetime.now().hour == 23 and datetime.now().minute == 30:
+#        conn_lt_init = pymysql.connect(
+#        user = 'jonsu0129',
+#        password = passwd_token,
+#        host = 'discord-database-kr.cqops5vysvnr.ap-northeast-2.rds.amazonaws.com',
+#        db = 'testDB',
+#        charset = 'utf8'
+#        )
+#        cur_lt_init = conn_lt_init.cursor()
+#        sql_lt_init = "update userTable set ltcount = 3"
+#            
+#        cur_lt_init.execute(sql_lt_init)
+#        conn_lt_init.commit()
+#        conn_lt_init.close()
+#        await client.get_channel(792887565589282827).send(f'복권이 3개로 초기화됐습니다.')
+
+
 @client.event
 async def on_message(message):
     if message.author == client.user:
@@ -187,6 +188,7 @@ async def on_message(message):
         await message.channel.send(embed=weapon_help)
 
     if message.content.startswith('무기등록! '):
+        await message.channel.send(f'정지된 기능입니다...')
         weapon_type = message.content.split()[1]
         weapon_name = message.content.split()[2]
         
@@ -227,6 +229,7 @@ async def on_message(message):
                 await message.channel.send(f'<@{message.author.id}>님은 이미 무기가 존재합니다! 무기 이름: {cur_weapon_exist[0][0]}')
 
     if message.content.startswith('무기이름변경! '):
+        await message.channel.send(f'정지된 기능입니다...')
         weapon_name_new = message.content.split()[1]
         conn_weapon_change = pymysql.connect(
             user = 'jonsu0129',
@@ -255,6 +258,7 @@ async def on_message(message):
             conn_weapon_change.close()
 
     if message.content.startswith('무기정보! '):
+        await message.channel.send(f'정지된 기능입니다...')
         info_weapon_name = message.content.split()[1]
         conn_weapon_info = pymysql.connect(
             user = 'jonsu0129',
@@ -308,6 +312,7 @@ async def on_message(message):
             await message.channel.send(embed=weapon_info)
             
     if message.content.startswith('무기잠재! '):
+        await message.channel.send(f'정지된 기능입니다...')
         cube = message.content.split()[1]
         if(cube == "수상한큐브"):
             conn_cube_susang = pymysql.connect(
@@ -362,6 +367,7 @@ async def on_message(message):
             pass
 
     if message.content.startswith('무기강화!'):
+        await message.channel.send(f'정지된 기능입니다...')
         # L = 40
         # for i in range(0,25):
         #     S = i
@@ -621,6 +627,7 @@ async def on_message(message):
         await message.channel.send(f"2hogi's pick : ★{sel_one}★")
 
     if message.content.startswith('송금!'):
+        await message.channel.send(f'정지된 기능입니다...')
         wire_data = message.content.split()
         wire_sender_id = message.author.id
         wire_rr = wire_data[1][2:][:-1]
@@ -671,6 +678,7 @@ async def on_message(message):
             conn_wire.close()
     
     if message.content.startswith('복권지급! '):
+        await message.channel.send(f'정지된 기능입니다...')
         if message.author.id == 268568994108145674:
             conn_add_lt = pymysql.connect(
             user = 'jonsu0129',
@@ -691,6 +699,7 @@ async def on_message(message):
             await message.channel.send(f'<@{message.author.id}>접근 권한이 없습니다!')
         
     if message.content.startswith('복권초기화!'):
+        await message.channel.send(f'정지된 기능입니다...')
         if message.author.id == 268568994108145674:
             conn_lt_init = pymysql.connect(
             user = 'jonsu0129',
@@ -716,6 +725,7 @@ async def on_message(message):
         await message.channel.send(f"빠큐")
     
     if message.content.startswith('명령어!'):
+        await message.channel.send(f'🔴DB를 이용한 기능은 정지되었습니다.🔴')
         help = discord.Embed(title=f"명령어!", color=0x62c1cc)
         help.add_field(name = "버스!", value = f'4인 기준 분배금을 알려줍니다.', inline = False)
         help.add_field(name = "검색!", value = f'검색! (닉네임)으로 간단한 정보를 보여줍니다.', inline = False)
@@ -751,6 +761,7 @@ async def on_message(message):
         await message.channel.send(embed=gamble_help)
         
     if message.content.startswith('등록!'):
+        await message.channel.send(f'정지된 기능입니다...')
         conn = pymysql.connect(
             user = 'jonsu0129',
             password = passwd_token,
@@ -774,6 +785,7 @@ async def on_message(message):
             conn.close()
 
     if message.content.startswith('데이터삭제!'):
+        await message.channel.send(f'정지된 기능입니다...')
         conn_del = pymysql.connect(
             user = 'jonsu0129',
             password = passwd_token,
@@ -798,6 +810,7 @@ async def on_message(message):
             await message.channel.send(f'<@{message.author.id}> 데이터가 존재하지 않습니다.')
 
     if message.content.startswith('내정보!'):
+        await message.channel.send(f'정지된 기능입니다...')
         conn_info = pymysql.connect(
         user = 'jonsu0129',
         password = passwd_token,
@@ -824,6 +837,7 @@ async def on_message(message):
         conn_info.close()
         
     if message.content.startswith('주식구매! '):
+        await message.channel.send(f'정지된 기능입니다...')
         conn_stock_buy = pymysql.connect(
             user = 'jonsu0129',
             password = passwd_token,
@@ -867,6 +881,7 @@ async def on_message(message):
             await message.channel.send(f'<@{message.author.id}> (주){stock_buy_name}을(를) {stock_buy_num}주 구매하였습니다. (보유 골드 : {user_money_stock_buy}G)\n(보유 (주){stock_buy_name} : {user_stock}주)')
 
     if message.content.startswith('주식판매! '):
+        await message.channel.send(f'정지된 기능입니다...')
         conn_stock_sell = pymysql.connect(
             user = 'jonsu0129',
             password = passwd_token,
@@ -908,6 +923,7 @@ async def on_message(message):
             await message.channel.send(f'<@{message.author.id}> (주){stock_sell_name}을(를) {stock_sell_num}주 판매하였습니다. (보유 골드 : {user_money_stock_sell}G)\n(보유 (주){stock_sell_name} : {user_stock}주)')
         
     if message.content.startswith('주식!'):
+        await message.channel.send(f'정지된 기능입니다...')
         conn_stock = pymysql.connect(
             user = 'jonsu0129',
             password = passwd_token,
@@ -928,6 +944,7 @@ async def on_message(message):
         await message.channel.send(embed=stock)
     
     if message.content.startswith('룰렛! '):
+        await message.channel.send(f'정지된 기능입니다...')
         conn_roulette = pymysql.connect(
             user = 'jonsu0129',
             password = passwd_token,
@@ -994,6 +1011,7 @@ async def on_message(message):
             conn_roulette.close()
         
     if message.content.startswith('복권!'):
+        await message.channel.send(f'정지된 기능입니다...')
         conn_lotto = pymysql.connect(
         user = 'jonsu0129',
         password = passwd_token,
@@ -1052,6 +1070,7 @@ async def on_message(message):
             conn_lotto.close()    
         
     if message.content.startswith('배팅가위바위보 '):
+        await message.channel.send(f'정지된 기능입니다...')
         lsp_user = ''
         lsp_list=['가위','바위','보']
         lsp_client = random.choice(lsp_list)
@@ -1125,6 +1144,7 @@ async def on_message(message):
         conn_lsp.close()
         
     if message.content.startswith('랭킹!'):
+        await message.channel.send(f'정지된 기능입니다...')
         conn_rank = pymysql.connect(
             user = 'jonsu0129',
             password = passwd_token,
@@ -1166,6 +1186,7 @@ async def on_message(message):
         conn_rank.close()
         
     if message.content.startswith('파산!'):
+        await message.channel.send(f'정지된 기능입니다...')
         conn_gu = pymysql.connect(
             user = 'jonsu0129',
             password = passwd_token,
@@ -1343,6 +1364,7 @@ async def on_message(message):
             
 #'뭐먹' 응답
     if message.content.startswith('뭐먹'):
+        await message.channel.send(f'정지된 기능입니다...')
         conn_mm = pymysql.connect(
         user = 'jonsu0129',
         password = passwd_token,
